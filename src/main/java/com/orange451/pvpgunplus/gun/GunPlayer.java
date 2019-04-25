@@ -18,7 +18,7 @@ import com.orange451.pvpgunplus.InventoryHelper;
 import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.PermissionInterface;
 
-import me.signatured.base.util.scheduler.Sync;
+import com.brawl.base.util.scheduler.Sync;
 
 public class GunPlayer
 {

@@ -1,8 +1,7 @@
 package com.orange451.pvpgunplus;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.brawl.base.packets.ParticlePacket;
+import com.evogames.compatibility.XEnumParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -10,8 +9,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import me.signatured.base.particle.Particle;
-import me.signatured.base.particle.ParticleType;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RaycastHelper
 {
@@ -57,9 +56,7 @@ public class RaycastHelper
             }
 
             if (!lastLoc.equals(temp.getLocation()) && temp1) {
-            	Particle particle = new Particle(ParticleType.REDSTONE, check, new Vector(0D, 0D, 0D), 0D, 2);
-            	particle.sendToWorld(check.getWorld());
-                //ParticleEffects.sendParticle(null, 128, "redstone", check, 0.0f, 0.0f, 0.0f, 0.0f, 2);
+                ParticlePacket.of(XEnumParticle.REDSTONE).at(check).count(2).send();
             }
         }
         return lastLoc;

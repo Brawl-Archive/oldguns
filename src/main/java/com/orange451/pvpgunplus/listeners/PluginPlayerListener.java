@@ -2,6 +2,7 @@ package com.orange451.pvpgunplus.listeners;
 
 import java.util.ArrayList;
 
+import com.brawl.base.BrawlPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -28,8 +29,6 @@ import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.PermissionInterface;
 import com.orange451.pvpgunplus.gun.Gun;
 import com.orange451.pvpgunplus.gun.GunPlayer;
-
-import me.signatured.base.PsykoPlugin;
 
 public class PluginPlayerListener implements Listener
 {
@@ -161,7 +160,7 @@ public class PluginPlayerListener implements Listener
             
             if ((label.equalsIgnoreCase("pvpgunplus")) && (args[0].equals("edit")))
             {
-                if (!player.isOp() || PsykoPlugin.getInstance().getServerType() != ServerType.TEST) {
+                if (!player.isOp() || BrawlPlugin.getInstance().getServerType() != ServerType.TEST) {
                 	player.sendMessage(C.cmdFail() + "No permissions");
                 	return;
                 }

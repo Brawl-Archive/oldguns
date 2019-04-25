@@ -1,10 +1,13 @@
 package com.orange451.pvpgunplus;
 
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Random;
-
+import com.brawl.base.util.scheduler.Sync;
+import com.orange451.pvpgunplus.gun.*;
+import com.orange451.pvpgunplus.listeners.PluginEntityListener;
+import com.orange451.pvpgunplus.listeners.PluginEntityListener.PStat;
+import com.orange451.pvpgunplus.listeners.PluginPlayerListener;
+import net.minecraft.server.v1_8_R3.DamageSource;
+import net.minecraft.server.v1_8_R3.EntityLiving;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -16,19 +19,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.orange451.pvpgunplus.gun.Bullet;
-import com.orange451.pvpgunplus.gun.EffectType;
-import com.orange451.pvpgunplus.gun.Gun;
-import com.orange451.pvpgunplus.gun.GunPlayer;
-import com.orange451.pvpgunplus.gun.WeaponReader;
-import com.orange451.pvpgunplus.listeners.PluginEntityListener;
-import com.orange451.pvpgunplus.listeners.PluginEntityListener.PStat;
-import com.orange451.pvpgunplus.listeners.PluginPlayerListener;
-
-import me.signatured.base.util.Util;
-import me.signatured.base.util.scheduler.Sync;
-import net.minecraft.server.v1_8_R3.DamageSource;
-import net.minecraft.server.v1_8_R3.EntityLiving;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class PVPGunPlus extends JavaPlugin
 {
@@ -66,7 +59,7 @@ public class PVPGunPlus extends JavaPlugin
         			continue;
         		
         		double damage = stat.getStackedDamage().poll();
-        		Util.convertLivingEntity(stat.getLent()).damageEntity(DamageSource.OUT_OF_WORLD, (float)damage);
+                ((CraftLivingEntity)stat.getLent()).getHandle().damageEntity(DamageSource.OUT_OF_WORLD, (float)damage);
         	}
         });
     }

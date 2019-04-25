@@ -1,11 +1,9 @@
 package com.orange451.pvpgunplus;
 
+import com.brawl.base.packets.ParticlePacket;
+import com.evogames.compatibility.XEnumParticle;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.util.Vector;
-
-import me.signatured.base.particle.Particle;
-import me.signatured.base.particle.ParticleType;
 
 public class PVPGunExplosion
 {
@@ -20,7 +18,6 @@ public class PVPGunExplosion
     {
         location.getWorld().playSound(location, Sound.EXPLODE, 1, 2);
 
-        Particle particle = new Particle(ParticleType.EXPLOSION_LARGE, location.clone().add(0D, 1D, 0D), new Vector(0.3D, 0.3D, 0.3D), 0.2D, 1);
-        particle.sendToWorld(location.getWorld());
+        ParticlePacket.of(XEnumParticle.EXPLOSION_LARGE).at(location.clone().add(0, 1, 0)).offset(0.3f, 0.3f, 0.3f).data(0.2f).count(1).send();
     }
 }
