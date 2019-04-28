@@ -14,7 +14,7 @@
 	<packaging>jar</packaging>
 
 	<name>OldGuns</name>
-	<url>http://www.brawl.com</url>
+	<url>https://www.brawl.com</url>
 	<description>Deprecated old Guns plugin that we still use for some reason</description>
 
 	<properties>
