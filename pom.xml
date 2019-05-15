@@ -6,7 +6,8 @@
 	<parent>
 		<groupId>me.paul</groupId>
 		<artifactId>parent-plugin</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
+		<relativePath>../parent/parent-plugin/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>oldguns</artifactId>
