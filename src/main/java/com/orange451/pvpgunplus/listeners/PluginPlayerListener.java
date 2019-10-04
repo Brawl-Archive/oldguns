@@ -229,7 +229,7 @@ public class PluginPlayerListener implements Listener
                 player.sendMessage(C.cmdSuccess() + "Edited gun!");
             }
 
-            if ((label.equalsIgnoreCase("pvpgunplus")) && (args[0].equals("toggle")))
+            if ((label.equalsIgnoreCase("pvpgunplus")) && (args[0].equals("toggle")) && args.length == 1)
             {
                 if (PermissionInterface.checkPermission(player, "pvpgunplus.user"))
                 {
