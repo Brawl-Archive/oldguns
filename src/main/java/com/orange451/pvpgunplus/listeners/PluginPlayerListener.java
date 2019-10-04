@@ -3,6 +3,7 @@ package com.orange451.pvpgunplus.listeners;
 import java.util.ArrayList;
 
 import com.brawl.base.BrawlPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -138,6 +139,9 @@ public class PluginPlayerListener implements Listener
             args[(i - 1)] = split[i];
         }
 
+        if(label.equalsIgnoreCase("pvpgunplus") && !player.isOp())
+            return;
+
         if (label.equalsIgnoreCase("pvpgunplus") && args.length == 0)
         {
             player.sendMessage(ChatColor.DARK_GRAY + "----" + ChatColor.GRAY + "[" + ChatColor.YELLOW + "PVPGUNPLUS" + ChatColor.GRAY + "]" + ChatColor.DARK_GRAY + "----");
@@ -241,6 +245,25 @@ public class PluginPlayerListener implements Listener
                             player.sendMessage(ChatColor.GRAY + "You have turned guns " + off);
                     }
                 }
+            }
+
+            if(label.equalsIgnoreCase("pvpgunplus") && args[0].equalsIgnoreCase("toggle") && args.length == 2) {
+                Player target = Bukkit.getPlayer(args[1]);
+
+                if(target != null) {
+                    GunPlayer gp = plugin.getGunPlayer(target);
+                    if (gp != null)
+                    {
+                        gp.enabled = !gp.enabled;
+                        String on = ChatColor.GREEN + "ON";
+                        String off = ChatColor.RED + "OFF";
+                        if (gp.enabled)
+                            player.sendMessage(ChatColor.GRAY + "You have turned " + target.getName() + "'s guns " + on);
+                        else
+                            player.sendMessage(ChatColor.GRAY + "You have turned " + target.getName() + "'s guns " + off);
+                    }
+                } else
+                    player.sendMessage(C.cmdFail() + "Player not found!");
             }
 
             if ((label.equalsIgnoreCase("pvpgunplus")) && (args[0].equals("list")))
