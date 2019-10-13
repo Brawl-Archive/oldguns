@@ -109,7 +109,7 @@ public class PluginEntityListener implements Listener
             }
 
             PVPGunPlusBulletCollideEvent evv = new PVPGunPlusBulletCollideEvent(bullet.getShooter(), bullet.getGun(), b);
-            plugin.getServer().getPluginManager().callEvent(evv);
+            evv.callEvent();
 
             if (bullet.destroyWhenHit)
             {
@@ -140,7 +140,7 @@ public class PluginEntityListener implements Listener
                         GunPlayer shooter = bullet.getShooter();
 
                         PVPGunPlusGunKillEntityEvent pvpgunkill = new PVPGunPlusGunKillEntityEvent(shooter, used, dead);
-                        plugin.getServer().getPluginManager().callEvent(pvpgunkill);
+                        pvpgunkill.callEvent();
                     }
                 }
             }
@@ -206,7 +206,7 @@ public class PluginEntityListener implements Listener
                         headshot = true;
                     }
                     PVPGunPlusGunDamageEntityEvent pvpgundmg = new PVPGunPlusGunDamageEntityEvent(event, bullet.getShooter(), bullet.getGun(), event.getEntity(), headshot);
-                    plugin.getServer().getPluginManager().callEvent(pvpgundmg);
+                    pvpgundmg.callEvent();
                     if (!pvpgundmg.isCancelled() /*&& !(hurt instanceof Player && ((Player) hurt).isInvulnerable())*/) {
                     	PVPGunPlus.resetPlayerDamage(hurt, 0);
                         double damage = pvpgundmg.getDamage();

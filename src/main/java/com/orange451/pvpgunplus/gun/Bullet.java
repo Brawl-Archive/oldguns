@@ -110,7 +110,7 @@ public class Bullet
                                     public void run()
                                     {
                                         PVPGunPlusGunKillEntityEvent pvpgunkill = new PVPGunPlusGunKillEntityEvent(mshooter, mgun, p_hit);
-                                        PVPGunPlus.getPlugin().getServer().getPluginManager().callEvent(pvpgunkill);
+                                        pvpgunkill.callEvent();
                                     }
                                 }, 1l);
                             }

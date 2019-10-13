@@ -116,7 +116,7 @@ public class Gun
                     if (!reloading)
                     {
                         PVPGunPlusFireGunEvent event = new PVPGunPlusFireGunEvent(owner, this);
-                        PVPGunPlus.getPlugin().getServer().getPluginManager().callEvent(event);
+                        event.callEvent();
                         if (!event.isCancelled())
                         {
                             if ((owner.checkAmmo(this, event.getAmountAmmoNeeded()) && event.getAmountAmmoNeeded() > 0) || event.getAmountAmmoNeeded() == 0)
@@ -306,7 +306,7 @@ public class Gun
     public void reloadGun()
     {
         PVPGunPlusReloadGunEvent pvpgunrel = new PVPGunPlusReloadGunEvent(owner, this);
-        PVPGunPlus.getPlugin().getServer().getPluginManager().callEvent(pvpgunrel);
+        pvpgunrel.callEvent();
         if (!pvpgunrel.isCancelled())
         {
             gunReloadTimer = pvpgunrel.getReloadTime();
