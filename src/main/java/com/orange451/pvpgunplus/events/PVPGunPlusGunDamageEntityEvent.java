@@ -100,6 +100,8 @@ public class PVPGunPlusGunDamageEntityEvent extends PVPGunPlusEvent {
 		float dmg = (float) getDamage() * (isHeadshot ? 2 : 1);
 		dmg = applyArmorModifier(dmg, damagedArmorPoints);
 		dmg = applyMagicModifiers(el, dmg);
+		dmg += armorPenetration;
+		
 		return dmg;
 	}
 
