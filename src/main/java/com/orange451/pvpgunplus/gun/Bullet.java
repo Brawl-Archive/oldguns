@@ -327,12 +327,11 @@ public class Bullet {
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof LivingEntity) {
 					EntityDamageByEntityEvent e = new EntityDamageByEntityEvent(shooter.getPlayer(), entities.get(i),
-							DamageCause.CUSTOM, 0);
+							DamageCause.FIRE, 1);
 					Bukkit.getServer().getPluginManager().callEvent(e);
 					if (!e.isCancelled()) {
 						// if (((LivingEntity)entities.get(i)).hasLineOfSight(projectile)) {
 						((LivingEntity) entities.get(i)).setLastDamage(0D);
-						((LivingEntity) entities.get(i)).damage(1, shooter.getPlayer());
 						((LivingEntity) entities.get(i)).setFireTicks(20 * 7);
 						// }
 					}
