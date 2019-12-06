@@ -3,11 +3,7 @@ package com.orange451.pvpgunplus.gun;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.orange451.pvpgunplus.PVPGunPlus;
 
@@ -58,12 +54,7 @@ public class EffectType
                 if ((player.getWorld().equals(this.location.getWorld())) &&
                         (this.location.distance(player.getLocation()) < this.radius))
                 {
-                	EntityDamageEvent e = new EntityDamageEvent(player, DamageCause.FIRE, 0D);
-    				Bukkit.getServer().getPluginManager().callEvent(e);
-    				if (!e.isCancelled()) {
-    					player.setLastDamage(0D);
-    					player.setFireTicks(20 * 3);
-    				}
+                    player.setFireTicks(20 * 5);
                 }
             }
         }
