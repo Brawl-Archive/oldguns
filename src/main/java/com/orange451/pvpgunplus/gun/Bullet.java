@@ -1,19 +1,47 @@
 package com.orange451.pvpgunplus.gun;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.entity.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Egg;
+import org.bukkit.entity.EnderPearl;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Fish;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LargeFireball;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.SmallFireball;
+import org.bukkit.entity.Snowball;
+import org.bukkit.entity.ThrownExpBottle;
+import org.bukkit.entity.ThrownPotion;
+import org.bukkit.entity.WitherSkull;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.*;
-import org.bukkit.plugin.*;
-import org.bukkit.potion.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.orange451.pvpgunplus.*;
-import com.orange451.pvpgunplus.events.*;
+import com.orange451.pvpgunplus.PVPGunExplosion;
+import com.orange451.pvpgunplus.PVPGunPlus;
+import com.orange451.pvpgunplus.RaycastHelper;
+import com.orange451.pvpgunplus.events.PVPGunPlusGunKillEntityEvent;
+
+import net.minecraft.server.v1_8_R3.DamageSource;
+import net.minecraft.server.v1_8_R3.Explosion;
 
 public class Bullet {
 	private int ticks;
@@ -302,12 +330,12 @@ public class Bullet {
 								mcwarfare.damagePlayer(((Player) entities.get(i)), dmg, DamageType.EXPLOSION,
 										shooter.getPlayer());
 							} else {
-								EntityDamageByEntityEvent e = new EntityDamageByEntityEvent(shooter.getPlayer(),
-										((LivingEntity) entities.get(i)), DamageCause.BLOCK_EXPLOSION, dmg);
-								Bukkit.getServer().getPluginManager().callEvent(e);
-								if (!e.isCancelled()) {
-									((LivingEntity) entities.get(i)).setLastDamage(0D);
-								}
+								Location loc = temp.clone();
+						        Explosion explosion = new Explosion(((CraftWorld) loc.getWorld()).getHandle(),
+						                ((CraftEntity) shooter.getPlayer()).getHandle(), loc.getX(), loc.getY(), loc.getZ(), 0F, false,
+						                false);
+								(((CraftLivingEntity)((LivingEntity) entities.get(i)))).getHandle().damageEntity(DamageSource.explosion(explosion), dmg);
+								((LivingEntity) entities.get(i)).setLastDamage(0D);
 							}
 						} else {
 							((LivingEntity) entities.get(i)).damage(dmg, shooter.getPlayer());
@@ -327,10 +355,11 @@ public class Bullet {
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof LivingEntity) {
 					EntityDamageByEntityEvent e = new EntityDamageByEntityEvent(shooter.getPlayer(), entities.get(i),
-							DamageCause.FIRE, 1);
+							DamageCause.CUSTOM, 0D);
 					Bukkit.getServer().getPluginManager().callEvent(e);
 					if (!e.isCancelled()) {
 						// if (((LivingEntity)entities.get(i)).hasLineOfSight(projectile)) {
+						(((CraftLivingEntity)((LivingEntity) entities.get(i)))).getHandle().damageEntity(DamageSource.BURN, 1F);
 						((LivingEntity) entities.get(i)).setLastDamage(0D);
 						((LivingEntity) entities.get(i)).setFireTicks(20 * 7);
 						// }
