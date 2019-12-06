@@ -1,14 +1,17 @@
 package com.orange451.pvpgunplus;
 
+import org.bukkit.Location;
+import org.bukkit.Sound;
+
 import com.brawl.base.packets.ParticlePacket;
 import com.evogames.compatibility.XEnumParticle;
 import com.orange451.pvpgunplus.events.PVPGunPlusBlockExplodeEvent;
 
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import lombok.Getter;
 
 public class PVPGunExplosion
 {
+	@Getter
     private Location location;
 
     public PVPGunExplosion(Location location)
