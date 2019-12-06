@@ -330,11 +330,7 @@ public class Bullet {
 								mcwarfare.damagePlayer(((Player) entities.get(i)), dmg, DamageType.EXPLOSION,
 										shooter.getPlayer());
 							} else {
-								Location loc = temp.clone();
-						        Explosion explosion = new Explosion(((CraftWorld) loc.getWorld()).getHandle(),
-						                ((CraftEntity) shooter.getPlayer()).getHandle(), loc.getX(), loc.getY(), loc.getZ(), 0F, false,
-						                false);
-								(((CraftLivingEntity)((LivingEntity) entities.get(i)))).getHandle().damageEntity(DamageSource.explosion(explosion), dmg);
+								((LivingEntity) entities.get(i)).damage(dmg, shooter.getPlayer());
 								((LivingEntity) entities.get(i)).setLastDamage(0D);
 							}
 						} else {
@@ -355,10 +351,11 @@ public class Bullet {
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof LivingEntity) {
 					EntityDamageByEntityEvent e = new EntityDamageByEntityEvent(shooter.getPlayer(), entities.get(i),
-							DamageCause.FIRE_TICK, 1D);
+							DamageCause.CUSTOM, 0D);
 					Bukkit.getServer().getPluginManager().callEvent(e);
 					if (!e.isCancelled()) {
 						// if (((LivingEntity)entities.get(i)).hasLineOfSight(projectile)) {
+						((LivingEntity) entities.get(i)).damage(1D, shooter.getPlayer());
 						((LivingEntity) entities.get(i)).setLastDamage(0D);
 						((LivingEntity) entities.get(i)).setFireTicks(20 * 7);
 						// }
