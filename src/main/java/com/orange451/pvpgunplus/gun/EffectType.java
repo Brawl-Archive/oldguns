@@ -46,18 +46,18 @@ public class EffectType
             return;
         }
         double yRad = this.radius;
-        if (this.type.equals(Effect.MOBSPAWNER_FLAMES))
-        {
-            yRad = 0.75D;
-            for (Player player : Bukkit.getOnlinePlayers())
-            {
-                if ((player.getWorld().equals(this.location.getWorld())) &&
-                        (this.location.distance(player.getLocation()) < this.radius))
-                {
-                    player.setFireTicks(20);
-                }
-            }
-        }
+//        if (this.type.equals(Effect.MOBSPAWNER_FLAMES))
+//        {
+//            yRad = 0.75D;
+//            for (Player player : Bukkit.getOnlinePlayers())
+//            {
+//                if ((player.getWorld().equals(this.location.getWorld())) &&
+//                        (this.location.distance(player.getLocation()) < this.radius))
+//                {
+//                    player.setFireTicks(20);
+//                }
+//            }
+//        }
 
         for (double i = -this.radius; i <= this.radius; i += 1.0D)
         {

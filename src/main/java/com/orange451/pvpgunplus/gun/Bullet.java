@@ -357,8 +357,9 @@ public class Bullet {
 					if (!e.isCancelled()) {
 						// if (((LivingEntity)entities.get(i)).hasLineOfSight(projectile)) {
 						((LivingEntity) entities.get(i)).damage(1D, shooter.getPlayer());
+						((LivingEntity) entities.get(i)).setLastDamageCause(new EntityDamageByEntityEvent(((LivingEntity) entities.get(i)), shooter.getPlayer(), DamageCause.FIRE, 1D));
 						((LivingEntity) entities.get(i)).setLastDamage(0D);
-						((LivingEntity) entities.get(i)).setFireTicks(20 * 7);
+						((LivingEntity) entities.get(i)).setFireTicks(20 * 3);
 						// }
 					}
 				}
