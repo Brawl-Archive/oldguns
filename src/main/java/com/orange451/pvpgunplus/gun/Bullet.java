@@ -331,6 +331,7 @@ public class Bullet {
 										shooter.getPlayer());
 							} else {
 								((LivingEntity) entities.get(i)).damage(dmg, shooter.getPlayer());
+								((LivingEntity) entities.get(i)).setLastDamageCause(new EntityDamageByEntityEvent(((LivingEntity) entities.get(i)), shooter.getPlayer(), DamageCause.ENTITY_EXPLOSION, dmg));
 								((LivingEntity) entities.get(i)).setLastDamage(0D);
 							}
 						} else {
