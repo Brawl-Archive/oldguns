@@ -3,7 +3,11 @@ package com.orange451.pvpgunplus.gun;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.orange451.pvpgunplus.PVPGunPlus;
 
@@ -46,18 +50,23 @@ public class EffectType
             return;
         }
         double yRad = this.radius;
-//        if (this.type.equals(Effect.MOBSPAWNER_FLAMES))
-//        {
-//            yRad = 0.75D;
-//            for (Player player : Bukkit.getOnlinePlayers())
-//            {
-//                if ((player.getWorld().equals(this.location.getWorld())) &&
-//                        (this.location.distance(player.getLocation()) < this.radius))
-//                {
-//                    player.setFireTicks(20);
-//                }
-//            }
-//        }
+        if (this.type.equals(Effect.MOBSPAWNER_FLAMES))
+        {
+            yRad = 0.75D;
+            for (Player player : Bukkit.getOnlinePlayers())
+            {
+                if ((player.getWorld().equals(this.location.getWorld())) &&
+                        (this.location.distance(player.getLocation()) < this.radius))
+                {
+                	EntityDamageEvent e = new EntityDamageEvent(player, DamageCause.FIRE, 0D);
+    				Bukkit.getServer().getPluginManager().callEvent(e);
+    				if (!e.isCancelled()) {
+    					player.setLastDamage(0D);
+    					player.setFireTicks(20 * 3);
+    				}
+                }
+            }
+        }
 
         for (double i = -this.radius; i <= this.radius; i += 1.0D)
         {
