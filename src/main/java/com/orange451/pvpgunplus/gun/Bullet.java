@@ -306,6 +306,9 @@ public class Bullet {
 							Location nloc = lastLocation.clone().add(i, ii, iii);
 							if (nloc.distance(lastLocation) <= rad && PVPGunPlus.getPlugin().random.nextInt(10) == 1)
 								new PVPGunExplosion(nloc).explode();
+							else {
+								PVPGunExplosion.callExplosionEvent(nloc);
+							}
 						}
 					}
 				}

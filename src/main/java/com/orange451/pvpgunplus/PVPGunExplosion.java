@@ -26,4 +26,9 @@ public class PVPGunExplosion
         
         new PVPGunPlusBlockExplodeEvent(this).callEvent();
     }
+    
+    public static void callExplosionEvent(Location l) {
+    	PVPGunExplosion e = new PVPGunExplosion(l);
+    	new PVPGunPlusBlockExplodeEvent(e).callEvent();
+    }
 }
