@@ -39,6 +39,8 @@ import com.orange451.pvpgunplus.PVPGunExplosion;
 import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.RaycastHelper;
 import com.orange451.pvpgunplus.events.PVPGunPlusGunKillEntityEvent;
+import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent;
+import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent.ProjectileType;
 
 import net.minecraft.server.v1_8_R3.DamageSource;
 import net.minecraft.server.v1_8_R3.Explosion;
@@ -333,13 +335,24 @@ public class Bullet {
 								mcwarfare.damagePlayer(((Player) entities.get(i)), dmg, DamageType.EXPLOSION,
 										shooter.getPlayer());
 							} else {
-								((LivingEntity) entities.get(i)).damage(dmg, shooter.getPlayer());
-								((LivingEntity) entities.get(i)).setLastDamageCause(new EntityDamageByEntityEvent(((LivingEntity) entities.get(i)), shooter.getPlayer(), DamageCause.ENTITY_EXPLOSION, dmg));
-								((LivingEntity) entities.get(i)).setLastDamage(0D);
+								LivingEntity hurt = (LivingEntity) entities.get(i);
+								PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, dmg, ProjectileType.GRENADE, hurt);
+								event.callEvent();
+								
+								if(!event.isCancelled()) {
+									hurt.damage(dmg, shooter.getPlayer());
+									hurt.setLastDamage(0D);
+								}
 							}
 						} else {
-							((LivingEntity) entities.get(i)).damage(dmg, shooter.getPlayer());
-							((LivingEntity) entities.get(i)).setLastDamage(0D);
+							LivingEntity hurt = (LivingEntity) entities.get(i);
+							PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, dmg, ProjectileType.GRENADE, hurt);
+							event.callEvent();
+							
+							if(!event.isCancelled()) {
+								hurt.damage(dmg, shooter.getPlayer());
+								hurt.setLastDamage(0D);
+							}
 						}
 					}
 				}
@@ -354,15 +367,14 @@ public class Bullet {
 			ArrayList<Entity> entities = (ArrayList<Entity>) projectile.getNearbyEntities(c, c, c);
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof LivingEntity) {
-					EntityDamageByEntityEvent e = new EntityDamageByEntityEvent(shooter.getPlayer(), entities.get(i),
-							DamageCause.CUSTOM, 0D);
-					Bukkit.getServer().getPluginManager().callEvent(e);
-					if (!e.isCancelled()) {
-						// if (((LivingEntity)entities.get(i)).hasLineOfSight(projectile)) {
-						((LivingEntity) entities.get(i)).damage(1D, shooter.getPlayer());
-						((LivingEntity) entities.get(i)).setLastDamage(0D);
-						((LivingEntity) entities.get(i)).setFireTicks(20 * 3);
-						// }
+					LivingEntity hurt = (LivingEntity) entities.get(i);
+					PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, 1D, ProjectileType.MOLOTOV, hurt);
+					event.callEvent();
+					
+					if(!event.isCancelled()) {
+						hurt.damage(1D, shooter.getPlayer());
+						hurt.setLastDamage(0D);
+						hurt.setFireTicks(20 * 3);
 					}
 				}
 			}
@@ -379,14 +391,13 @@ public class Bullet {
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof LivingEntity) {
 					if (RaycastHelper.hasLineOfSight(temp, ((LivingEntity) entities.get(i)).getEyeLocation())) {
-						EntityDamageByEntityEvent e = new EntityDamageByEntityEvent(shooter.getPlayer(),
-								entities.get(i), DamageCause.CUSTOM, 0);
-						Bukkit.getServer().getPluginManager().callEvent(e);
-						if (!e.isCancelled()) {
-							// if (((LivingEntity)entities.get(i)).hasLineOfSight(projectile)) {
+						LivingEntity hurt = (LivingEntity) entities.get(i);
+						PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, 0D, ProjectileType.FLASHBANG, hurt);
+						event.callEvent();
+						
+						if(!event.isCancelled()) {
 							((LivingEntity) entities.get(i))
-									.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 7, 1));
-							// }
+							.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 7, 1));
 						}
 					}
 				}
