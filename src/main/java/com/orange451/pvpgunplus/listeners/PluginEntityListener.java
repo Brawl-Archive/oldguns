@@ -12,7 +12,6 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -266,7 +265,7 @@ public class PluginEntityListener implements Listener
     @Data
 	public static class PStat {
     	
-    	public static final Duration DELAY_HIT = Duration.ticks(10);
+    	public static final Duration DELAY_HIT = Duration.ticks(15);
     	
     	private LivingEntity lent;
     	private long lastHit = 0;
