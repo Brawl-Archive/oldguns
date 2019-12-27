@@ -53,7 +53,7 @@ public class PVPGunPlus extends JavaPlugin
 
         startup(true);
        
-        Sync.get().interval(10).run(() -> {
+        Sync.get().interval(1).run(() -> {
         	for(PStat stat : entityListener.stackedDamage.values()) {
         		if(stat.getStackedDamage().isEmpty())
         			continue;
