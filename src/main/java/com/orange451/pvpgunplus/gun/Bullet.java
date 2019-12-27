@@ -372,10 +372,10 @@ public class Bullet {
 					event.callEvent();
 					
 					if(!event.isCancelled()) {
+						hurt.setFireTicks(20 * 3);
 						hurt.damage(1D, shooter.getPlayer());
 						PVPGunPlus.resetPlayerDamage(hurt, 0);
 //						hurt.setLastDamage(0D);
-						hurt.setFireTicks(20 * 3);
 					}
 				}
 			}
