@@ -25,6 +25,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.brawl.base.util.scheduler.Sync;
 import com.evogames.util.Duration;
 import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.events.PVPGunPlusBulletCollideEvent;
@@ -231,8 +232,6 @@ public class PluginEntityListener implements Listener
                             hurt.setHealth(newHealth);
                         }
 
-                        bullet.getGun().doKnockback(hurt, bullet.getVelocity());
-
                         if (bullet.destroyWhenHit)
                             bullet.remove();
 
@@ -245,6 +244,8 @@ public class PluginEntityListener implements Listener
 
                         PVPGunPlus.resetPlayerDamage(hurt, 0);
                         isBullet = true;
+                        
+                        Sync.get().delay(1).run(() -> bullet.getGun().doKnockback(hurt, bullet.getVelocity()));
                     } else
                     {
                         event.setCancelled(true);
