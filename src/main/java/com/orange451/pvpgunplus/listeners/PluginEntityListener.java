@@ -245,7 +245,7 @@ public class PluginEntityListener implements Listener
                         PVPGunPlus.resetPlayerDamage(hurt, 0);
                         isBullet = true;
                         
-                        Sync.get().delay(1).run(() -> bullet.getGun().doKnockback(hurt, bullet.getVelocity()));
+                        bullet.getGun().doKnockback(hurt, bullet.getVelocity());
                     } else
                     {
                         event.setCancelled(true);
