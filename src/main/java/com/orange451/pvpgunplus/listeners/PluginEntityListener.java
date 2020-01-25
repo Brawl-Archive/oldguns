@@ -221,7 +221,7 @@ public class PluginEntityListener implements Listener
 
                         event.setDamage(damage * mult);
                         //System.out.println(event.getDamage());
-                        int armorPenetration = bullet.getGun().getArmorPenetration();
+                        int armorPenetration = pvpgundmg.getArmorPenetration();
                         if (armorPenetration > 0) {
                             int health = (int) ((Damageable) hurt).getHealth();
                             int newHealth = health - armorPenetration;
