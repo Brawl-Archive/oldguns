@@ -13,6 +13,9 @@
 .idea/*
 *.iml
 
+# Output Directory
+out/
+
 # Sensitive or high-churn files:
 .idea/dataSources.ids
 .idea/dataSources.xml
