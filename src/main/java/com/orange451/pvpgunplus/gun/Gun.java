@@ -585,6 +585,10 @@ public class Gun
     {
         this.bulletsPerClick = parseInt;
     }
+    
+    public int getBulletsPerClick() {
+    	return bulletsPerClick;
+    }
 
     public void setBulletSpeed(double parseDouble)
     {
