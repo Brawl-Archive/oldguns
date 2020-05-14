@@ -384,7 +384,7 @@ public class Bullet {
 
 	public void flash() {
 		if (shotFrom.getFlashRadius() > 0) {
-			lastLocation.getWorld().playSound(lastLocation, Sound.SPLASH, 20, 20);
+			lastLocation.getWorld().playSound(lastLocation, Sound.SPLASH, 1F, 3F);
 
 			Location temp = lastLocation.clone().add(0, 0.55, 0);
 			int c = (int) (shotFrom.getFlashRadius());
