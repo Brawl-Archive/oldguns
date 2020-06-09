@@ -179,7 +179,7 @@ public class PluginEntityListener implements Listener
     		return;
     	}
     	
-    	if (!cause.equals(DamageCause.PROJECTILE)) {
+    	if (cause != DamageCause.PROJECTILE  && cause != DamageCause.FALL) {
     		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PVPGunPlus.resetPlayerDamage((LivingEntity) entity, 20), 1);
     	}
     }
