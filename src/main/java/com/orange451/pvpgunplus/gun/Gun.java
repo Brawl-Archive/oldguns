@@ -447,8 +447,9 @@ public class Gun
     {
         if (this.knockback > 0)
         {
-            speed.normalize().setY(0.6).multiply(this.knockback / 4d);
-            entity.setVelocity(speed);
+            Vector toApply = speed.normalize()/*.setY(0.6)*/.multiply(this.knockback / 4d);
+            toApply = entity.getVelocity().clone().add(toApply).setY(entity.getVelocity().getY());
+            entity.setVelocity(toApply);
         }
     }
 
