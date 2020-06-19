@@ -310,7 +310,7 @@ public class GunPlayer
             if (ammoLeft < 0)
                 ammoLeft = 0;
             leftInClip = currentAmmo - ammoLeft;
-            add = ChatColor.YELLOW + "    «" + Integer.toString(leftInClip) + " │ " + Integer.toString(ammoLeft) + "»";
+            add = ChatColor.YELLOW + "    «" + Integer.toString(leftInClip) + " │ " + (current.isInfiniteAmmo() ? "∞" : Integer.toString(ammoLeft)) + "»";
             if (current.reloading) {
                 int reloadSize = 4;
                 double reloadFrac = ((current.getReloadTime() - current.gunReloadTimer) / (double) current.getReloadTime());

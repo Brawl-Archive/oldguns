@@ -278,6 +278,7 @@ public class Gun {
 		if (this.releaseEffect != null) {
 			g.releaseEffect = this.releaseEffect.clone();
 		}
+		g.infiniteAmmo = this.infiniteAmmo;
 
 		return g;
 	}
