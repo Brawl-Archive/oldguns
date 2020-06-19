@@ -440,7 +440,10 @@ public class Gun {
 		if(infiniteAmmo && owner != null && owner.getPlayer() != null && owner.getPlayer().isOnline()) {
 			int ammo = InventoryHelper.amtItem(owner.getPlayer().getInventory(), getAmmoType(), getAmmoTypeByte());
 			int needed = Math.max(0, (maxClipSize - ammo));
-			owner.getPlayer().getInventory().addItem(new ItemStack(getAmmoMaterial(), needed));
+			
+			if(needed != 0) {
+				owner.getPlayer().getInventory().addItem(new ItemStack(getAmmoMaterial(), needed));
+			}
 		}
 	}
 
