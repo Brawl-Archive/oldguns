@@ -10,11 +10,16 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import com.orange451.pvpgunplus.InventoryHelper;
 import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.events.PVPGunPlusFireGunEvent;
 import com.orange451.pvpgunplus.events.PVPGunPlusReloadGunEvent;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class Gun {
 	private boolean canHeadshot;//
@@ -37,6 +42,9 @@ public class Gun {
 	private int gunType;
 	private int ammoType;
 
+	@Getter @Setter
+	private boolean infiniteAmmo = false;
+	
 	private int ammoAmtNeeded;
 
 	private int gunDamage;
@@ -427,6 +435,12 @@ public class Gun {
 		roundsFired = 0;
 		changed = false;
 		gunReloadTimer = 0;
+		
+		if(infiniteAmmo && owner != null && owner.getPlayer() != null && owner.getPlayer().isOnline()) {
+			int ammo = InventoryHelper.amtItem(owner.getPlayer().getInventory(), getAmmoType(), getAmmoTypeByte());
+			int needed = Math.min(0, (maxClipSize - ammo));
+			owner.getPlayer().getInventory().addItem(new ItemStack(getAmmoMaterial(), needed));
+		}
 	}
 
 	private void finishShooting() {
