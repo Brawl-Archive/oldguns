@@ -354,7 +354,7 @@ public class GunPlayer
             guns.get(i).clear();
         }
     }
-
+    
     public void reloadAllGuns()
     {
         for (int i = guns.size() - 1; i >= 0; i--)
@@ -377,6 +377,9 @@ public class GunPlayer
     {
         if (amount == 0)
             return;
+        if(gun.isInfiniteAmmo())
+        	return;
+        
         InventoryHelper.removeItem(controller.getInventory(), gun.getAmmoType(), gun.getAmmoTypeByte(), amount);
     }
 

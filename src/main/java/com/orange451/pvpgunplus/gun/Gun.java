@@ -451,6 +451,15 @@ public class Gun {
 		bulletsShot = 0;
 		timer = bulletDelayTime;// reloadTime;
 		firing = false;
+		
+		if(infiniteAmmo && owner != null && owner.getPlayer() != null && owner.getPlayer().isOnline()) {
+			int ammo = InventoryHelper.amtItem(owner.getPlayer().getInventory(), getAmmoType(), getAmmoTypeByte());
+			int needed = Math.max(0, (maxClipSize - ammo));
+			
+			if(needed != 0) {
+				owner.getPlayer().getInventory().addItem(new ItemStack(getAmmoMaterial(), needed));
+			}
+		}
 	}
 
 	public String getName() {
