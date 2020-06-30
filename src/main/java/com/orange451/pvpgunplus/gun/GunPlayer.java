@@ -14,11 +14,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.brawl.base.util.scheduler.Sync;
 import com.orange451.pvpgunplus.InventoryHelper;
 import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.PermissionInterface;
 
-import com.brawl.base.util.scheduler.Sync;
+import lombok.Getter;
+import lombok.Setter;
 
 public class GunPlayer
 {
@@ -36,7 +38,8 @@ public class GunPlayer
     public Location lastHitLocation;
 	public GunPlayer lastHitSource;
 
-    public boolean enabled = true;
+	@Getter @Setter
+    private boolean enabled = true;
     public boolean takeLavaDamage = true;
     
     private static Integer GUN_SWAP_COOLDOWN = null;
@@ -190,7 +193,7 @@ public class GunPlayer
     public void tick()
     {
         ticks++;
-        if (controller != null)
+        if (enabled && controller != null)
         {
             renameGuns(controller);
             ItemStack hand = controller.getItemInHand();

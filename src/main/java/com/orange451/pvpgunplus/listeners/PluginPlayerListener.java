@@ -236,10 +236,10 @@ public class PluginPlayerListener implements Listener
                     GunPlayer gp = plugin.getGunPlayer(player);
                     if (gp != null)
                     {
-                        gp.enabled = !gp.enabled;
+                        gp.setEnabled(!gp.isEnabled());
                         String on = ChatColor.GREEN + "ON";
                         String off = ChatColor.RED + "OFF";
-                        if (gp.enabled)
+                        if (gp.isEnabled())
                             player.sendMessage(ChatColor.GRAY + "You have turned guns " + on);
                         else
                             player.sendMessage(ChatColor.GRAY + "You have turned guns " + off);
@@ -254,10 +254,10 @@ public class PluginPlayerListener implements Listener
                     GunPlayer gp = plugin.getGunPlayer(target);
                     if (gp != null)
                     {
-                        gp.enabled = !gp.enabled;
+                        gp.setEnabled(!gp.isEnabled());
                         String on = ChatColor.GREEN + "ON";
                         String off = ChatColor.RED + "OFF";
-                        if (gp.enabled)
+                        if (gp.isEnabled())
                             player.sendMessage(ChatColor.GRAY + "You have turned " + target.getName() + "'s guns " + on);
                         else
                             player.sendMessage(ChatColor.GRAY + "You have turned " + target.getName() + "'s guns " + off);
