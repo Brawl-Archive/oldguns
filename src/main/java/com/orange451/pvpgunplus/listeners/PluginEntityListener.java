@@ -26,7 +26,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.brawl.base.util.scheduler.Sync;
-import com.evogames.util.Duration;
+import com.brawl.shared.util.Duration;
 import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.events.PVPGunPlusBulletCollideEvent;
 import com.orange451.pvpgunplus.events.PVPGunPlusGunDamageEntityEvent;

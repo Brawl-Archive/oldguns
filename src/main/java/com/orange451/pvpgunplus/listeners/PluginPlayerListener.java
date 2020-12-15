@@ -24,8 +24,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.evogames.chat.C;
-import com.evogames.server.ServerType;
+import com.brawl.shared.chat.C;
+import com.brawl.shared.server.ServerType;
 import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.PermissionInterface;
 import com.orange451.pvpgunplus.gun.Gun;

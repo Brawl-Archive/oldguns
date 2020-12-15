@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 
 import com.brawl.base.packets.ParticlePacket;
-import com.evogames.compatibility.XEnumParticle;
+import com.brawl.shared.compatibility.XEnumParticle;
 import com.orange451.pvpgunplus.events.PVPGunPlusBlockExplodeEvent;
 
 import lombok.Getter;

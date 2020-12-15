@@ -1,7 +1,7 @@
 package com.orange451.pvpgunplus;
 
 import com.brawl.base.packets.ParticlePacket;
-import com.evogames.compatibility.XEnumParticle;
+import com.brawl.shared.compatibility.XEnumParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
