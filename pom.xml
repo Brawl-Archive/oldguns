@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>me.paul</groupId>
 		<artifactId>parent-plugin</artifactId>
-		<version>0.0.3-SNAPSHOT</version>
+		<version>1.5-SNAPSHOT</version>
 		<relativePath>../parent/parent-plugin/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>oldguns</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.5-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>OldGuns</name>
@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>me.paul</groupId>
 			<artifactId>base</artifactId>
-			<version>1.4-SNAPSHOT</version>
+			<version>1.5-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
