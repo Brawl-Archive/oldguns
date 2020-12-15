@@ -1,5 +1,5 @@
 name: ${name}
-version: ${version}
+version: ${version} ${git.branch}/${git.commit.id.abbrev}
 description: ${description}
 author: ${author}
 website: ${url}
