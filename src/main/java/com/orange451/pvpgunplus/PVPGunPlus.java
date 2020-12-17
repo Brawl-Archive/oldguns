@@ -1,7 +1,7 @@
 package com.orange451.pvpgunplus;
 
-
 import com.brawl.base.util.scheduler.Sync;
+import com.orange451.pvpgunplus.commands.TestingCommand;
 import com.orange451.pvpgunplus.gun.*;
 import com.orange451.pvpgunplus.listeners.PluginEntityListener;
 import com.orange451.pvpgunplus.listeners.PluginEntityListener.PStat;
@@ -27,10 +27,10 @@ public class PVPGunPlus extends JavaPlugin
 {
     private PluginPlayerListener playerListener = new PluginPlayerListener(this);
     private PluginEntityListener entityListener = new PluginEntityListener(this);
-    public ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-    private ArrayList<Gun> loadedGuns = new ArrayList<Gun>();
-    private ArrayList<EffectType> effects = new ArrayList<EffectType>();
-    private ArrayList<GunPlayer> players = new ArrayList<GunPlayer>();
+    public ArrayList<Bullet> bullets = new ArrayList<>();
+    private ArrayList<Gun> loadedGuns = new ArrayList<>();
+    private ArrayList<EffectType> effects = new ArrayList<>();
+    private ArrayList<GunPlayer> players = new ArrayList<>();
     private String pluginName = "PVPGunPlus";
 
     public int UpdateTimer;
@@ -50,6 +50,7 @@ public class PVPGunPlus extends JavaPlugin
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(this.playerListener, this);
         pm.registerEvents(this.entityListener, this);
+        new TestingCommand().registerCommand();
 
         startup(true);
        

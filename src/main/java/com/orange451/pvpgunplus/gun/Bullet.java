@@ -169,8 +169,11 @@ public class Bullet {
 				if (ticks > releaseTime) {
 					// 12-16 - REMOVING THIS. ADDING BETTER MOLLY EFFECT THIS IS ONLY POLACE WHERE THIS CODE IS USED LUL + IT BLOWS
 					EffectType eff = shotFrom.releaseEffect;
-					if (eff != null && eff.type == Effect.MOBSPAWNER_FLAMES) {
-						doFireExplode();
+					if(eff != null) {
+						if(eff.type == Effect.MOBSPAWNER_FLAMES && GunTests.WAR_MOLLY.isActive())
+							doFireExplode();
+						else
+							eff.start(lastLocation);
 					}
 					dead = true;
 					return;
@@ -284,7 +287,24 @@ public class Bullet {
 	public void explode() {
 
 		if (shotFrom.getFireRadius() > 0) {
-			doFireExplode();
+			if(GunTests.WAR_MOLLY.isActive())
+				doFireExplode();
+			else {
+				int rad = (int) shotFrom.getFireRadius();
+				int rad2 = 2;
+				for (int i = -rad; i <= rad; i++) {
+					for (int ii = -rad2 / 2; ii <= rad2 / 2; ii++) {
+						for (int iii = -rad; iii <= rad; iii++) {
+							Location nloc = lastLocation.clone().add(i, ii, iii);
+							if (nloc.distance(lastLocation) <= rad && PVPGunPlus.getPlugin().random.nextInt(5) == 1) {
+								lastLocation.getWorld().playEffect(nloc, Effect.MOBSPAWNER_FLAMES, 2);
+								// lastLocation.getWorld().playEffect(nloc, Effect.getById(2001),
+								// Material.FIRE);
+							}
+						}
+					}
+				}
+			}
 		}
 
 		if (shotFrom.getExplodeRadius() > 0) {
@@ -385,18 +405,22 @@ public class Bullet {
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof LivingEntity) {
 					LivingEntity lent = (LivingEntity) entities.get(i);
-
 					if (RaycastHelper.hasLineOfSight(temp, lent.getEyeLocation())) {
 						PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, 0D, ProjectileType.FLASHBANG, lent);
 						event.callEvent();
 
 						if (!event.isCancelled()) {
-							Vec3 direction = Vec3.v(lent.getEyeLocation().getDirection());
-							Vec3 pos = Vec3.v(temp);
+							if(GunTests.FLASH_TURNING.isActive()) {
+								Vec3 direction = Vec3.v(lent.getEyeLocation().getDirection());
+								Vec3 pos = Vec3.v(temp);
 
-							double scaledAngle = ( 180.0D - Math.toDegrees(pos.angle(direction))) / 180.0D;
-							int scaledTicks = (int) (MAX_FLASH * scaledAngle);
-							lent.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, scaledTicks, 1));
+								double scaledAngle = ( 180.0D - Math.toDegrees(pos.angle(direction))) / 180.0D;
+								int scaledTicks = (int) (MAX_FLASH * scaledAngle);
+								lent.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, scaledTicks, 1));
+							}else {
+								((LivingEntity) entities.get(i))
+										.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 3, 1));
+							}
 						}
 					}
 				}
