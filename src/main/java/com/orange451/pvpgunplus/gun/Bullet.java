@@ -1,49 +1,20 @@
 package com.orange451.pvpgunplus.gun;
 
-import java.util.ArrayList;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Fish;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LargeFireball;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.SmallFireball;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.WitherSkull;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import com.brawl.base.util.scheduler.*;
+import com.brawl.shared.util.*;
+import com.orange451.pvpgunplus.*;
+import com.orange451.pvpgunplus.events.*;
+import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent.*;
+import com.orange451.pvpgunplus.gun.util.*;
+import org.bukkit.*;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
+import org.bukkit.plugin.*;
+import org.bukkit.potion.*;
 import org.bukkit.util.Vector;
 
-import com.orange451.pvpgunplus.PVPGunExplosion;
-import com.orange451.pvpgunplus.PVPGunPlus;
-import com.orange451.pvpgunplus.RaycastHelper;
-import com.orange451.pvpgunplus.events.PVPGunPlusGunKillEntityEvent;
-import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent;
-import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent.ProjectileType;
-
-import net.minecraft.server.v1_8_R3.DamageSource;
-import net.minecraft.server.v1_8_R3.Explosion;
+import java.util.*;
 
 public class Bullet {
 	private int ticks;
@@ -125,16 +96,16 @@ public class Bullet {
 						if (plugin != null && plugin instanceof DamageListener) {
 							DamageListener mcwarfare = (DamageListener) plugin;
 							mcwarfare.damagePlayer(p_hit, shotFrom.getGunDamage(), DamageType.PLAYER,
-									shooter.getPlayer());
+												   shooter.getPlayer());
 							if ((p_hit.isDead() || ((Damageable) p_hit).getHealth() <= 0)) {
 								PVPGunPlus.getPlugin().getServer().getScheduler()
-										.scheduleSyncDelayedTask(PVPGunPlus.getPlugin(), new Runnable() {
-											public void run() {
-												PVPGunPlusGunKillEntityEvent pvpgunkill = new PVPGunPlusGunKillEntityEvent(
-														mshooter, mgun, p_hit);
-												pvpgunkill.callEvent();
-											}
-										}, 1l);
+										  .scheduleSyncDelayedTask(PVPGunPlus.getPlugin(), new Runnable() {
+											  public void run() {
+												  PVPGunPlusGunKillEntityEvent pvpgunkill = new PVPGunPlusGunKillEntityEvent(
+														  mshooter, mgun, p_hit);
+												  pvpgunkill.callEvent();
+											  }
+										  }, 1l);
 							}
 						} else {
 							p_hit.damage(shotFrom.getGunDamage(), shooter.getPlayer());
@@ -196,9 +167,10 @@ public class Bullet {
 				}
 
 				if (ticks > releaseTime) {
+					// 12-16 - REMOVING THIS. ADDING BETTER MOLLY EFFECT THIS IS ONLY POLACE WHERE THIS CODE IS USED LUL + IT BLOWS
 					EffectType eff = shotFrom.releaseEffect;
-					if (eff != null) {
-						eff.start(lastLocation);
+					if (eff != null && eff.type == Effect.MOBSPAWNER_FLAMES) {
+						doFireExplode();
 					}
 					dead = true;
 					return;
@@ -276,24 +248,43 @@ public class Bullet {
 		}
 	}
 
+	private void doFireExplode() {
+		double radius = shotFrom.getFireRadius();
+		List<Block> fireBlocks = new LinkedList<>();
+
+		// initialize custom explosion
+		CustomExplosion explosion = CustomExplosion.at(lastLocation.clone());
+		explosion.setSize(radius);
+		explosion.setBreakBlocks(false);
+		explosion.setDamageEntities(false);
+		explosion.setChainExplosions(false);
+		explosion.setDropYield(0);
+		explosion.setFireChance(0.6);
+		explosion.igniteListener(fireBlocks::add);
+
+		// call event
+		PVPGunExplosion.callExplosionEvent(lastLocation.clone());
+
+		// boom
+		explosion.boom();
+
+		// remove after duration expires
+		Sync.get().delay(FIRE_TIME).run(() -> {
+			for (Block b : fireBlocks) {
+				if (b.getType() == Material.FIRE) {
+					b.setType(Material.AIR);
+				}
+			}
+		});
+	}
+
+	private static final Duration FIRE_TIME = Duration.seconds(5);
+
 	@SuppressWarnings("null")
 	public void explode() {
 
 		if (shotFrom.getFireRadius() > 0) {
-			int rad = (int) shotFrom.getFireRadius();
-			int rad2 = 2;
-			for (int i = -rad; i <= rad; i++) {
-				for (int ii = -rad2 / 2; ii <= rad2 / 2; ii++) {
-					for (int iii = -rad; iii <= rad; iii++) {
-						Location nloc = lastLocation.clone().add(i, ii, iii);
-						if (nloc.distance(lastLocation) <= rad && PVPGunPlus.getPlugin().random.nextInt(5) == 1) {
-							lastLocation.getWorld().playEffect(nloc, Effect.MOBSPAWNER_FLAMES, 2);
-							// lastLocation.getWorld().playEffect(nloc, Effect.getById(2001),
-							// Material.FIRE);
-						}
-					}
-				}
-			}
+			doFireExplode();
 		}
 
 		if (shotFrom.getExplodeRadius() > 0) {
@@ -333,13 +324,13 @@ public class Bullet {
 							if (plugin != null && plugin instanceof DamageListener) {
 								DamageListener mcwarfare = (DamageListener) plugin;
 								mcwarfare.damagePlayer(((Player) entities.get(i)), dmg, DamageType.EXPLOSION,
-										shooter.getPlayer());
+													   shooter.getPlayer());
 							} else {
 								LivingEntity hurt = (LivingEntity) entities.get(i);
 								PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, dmg, ProjectileType.GRENADE, hurt);
 								event.callEvent();
-								
-								if(!event.isCancelled()) {
+
+								if (!event.isCancelled()) {
 									hurt.damage(dmg, shooter.getPlayer());
 									hurt.setLastDamage(0D);
 								}
@@ -348,8 +339,8 @@ public class Bullet {
 							LivingEntity hurt = (LivingEntity) entities.get(i);
 							PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, dmg, ProjectileType.GRENADE, hurt);
 							event.callEvent();
-							
-							if(!event.isCancelled()) {
+
+							if (!event.isCancelled()) {
 								hurt.damage(dmg, shooter.getPlayer());
 								hurt.setLastDamage(0D);
 							}
@@ -370,12 +361,12 @@ public class Bullet {
 					LivingEntity hurt = (LivingEntity) entities.get(i);
 					PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, 1D, ProjectileType.MOLOTOV, hurt);
 					event.callEvent();
-					
-					if(!event.isCancelled()) {
+
+					if (!event.isCancelled()) {
 						hurt.setFireTicks(20 * 3);
 						hurt.damage(1D, shooter.getPlayer());
 						PVPGunPlus.resetPlayerDamage(hurt, 0);
-//						hurt.setLastDamage(0D);
+						//						hurt.setLastDamage(0D);
 					}
 				}
 			}
@@ -395,10 +386,10 @@ public class Bullet {
 						LivingEntity hurt = (LivingEntity) entities.get(i);
 						PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, 0D, ProjectileType.FLASHBANG, hurt);
 						event.callEvent();
-						
-						if(!event.isCancelled()) {
+
+						if (!event.isCancelled()) {
 							((LivingEntity) entities.get(i))
-							.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 3, 1));
+									.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 3, 1));
 						}
 					}
 				}
