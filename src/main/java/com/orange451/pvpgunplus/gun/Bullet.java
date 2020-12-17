@@ -398,7 +398,7 @@ public class Bullet {
 						
 						if(!event.isCancelled()) {
 							((LivingEntity) entities.get(i))
-							.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 7, 1));
+							.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 3, 1));
 						}
 					}
 				}
