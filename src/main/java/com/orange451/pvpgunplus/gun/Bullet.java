@@ -373,6 +373,8 @@ public class Bullet {
 		}
 	}
 
+	private static final int MAX_FLASH = 70;
+
 	public void flash() {
 		if (shotFrom.getFlashRadius() > 0) {
 			lastLocation.getWorld().playSound(lastLocation, Sound.SPLASH, 1F, 3F);
@@ -382,14 +384,19 @@ public class Bullet {
 			ArrayList<Entity> entities = RaycastHelper.getNearbyEntities(temp, c);
 			for (int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof LivingEntity) {
-					if (RaycastHelper.hasLineOfSight(temp, ((LivingEntity) entities.get(i)).getEyeLocation())) {
-						LivingEntity hurt = (LivingEntity) entities.get(i);
-						PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, 0D, ProjectileType.FLASHBANG, hurt);
+					LivingEntity lent = (LivingEntity) entities.get(i);
+
+					if (RaycastHelper.hasLineOfSight(temp, lent.getEyeLocation())) {
+						PVPGunPlusProjectileDamageEvent event = new PVPGunPlusProjectileDamageEvent(shotFrom, shooter, 0D, ProjectileType.FLASHBANG, lent);
 						event.callEvent();
 
 						if (!event.isCancelled()) {
-							((LivingEntity) entities.get(i))
-									.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 3, 1));
+							Vec3 direction = Vec3.v(lent.getEyeLocation().getDirection());
+							Vec3 pos = Vec3.v(temp);
+
+							double scaledAngle = ( 180.0D - Math.toDegrees(pos.angle(direction))) / 180.0D;
+							int scaledTicks = (int) (MAX_FLASH * scaledAngle);
+							lent.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, scaledTicks, 1));
 						}
 					}
 				}
