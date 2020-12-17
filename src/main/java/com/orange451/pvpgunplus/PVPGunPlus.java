@@ -51,6 +51,7 @@ public class PVPGunPlus extends JavaPlugin
         pm.registerEvents(this.playerListener, this);
         pm.registerEvents(this.entityListener, this);
         new TestingCommand().registerCommand();
+        GunTests.init();
 
         startup(true);
        
