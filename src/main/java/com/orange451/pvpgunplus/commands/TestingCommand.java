@@ -21,18 +21,18 @@ public class TestingCommand extends RankOnlyCommand {
     @Override
     public boolean onExecute(CommandSender sender, String alias, String[] args) {
         if(args.length == 0) {
-            sender.sendMessage(C.warn(C.DBLUE) + "Welcome to WarZ Testing! To see the status of a test, do /test info [key], and to toggle a key, just do /test [key]");
-            sender.sendMessage(C.warn(C.DBLUE) + "Currently Active Keys (status | key | description)");
+            sender.sendMessage(C.warn(C.DGREEN) + "Welcome to Gun Testing! To see the status of a test, do /guntest info [key], and to toggle a key, just do /guntest [key]");
+            sender.sendMessage(C.warn(C.DGREEN) + "Currently Active Keys (status | key | description)");
             for(GunTests entry : GunTests.getTests().keySet()) {
-                sender.sendMessage(C.info(C.BLUE) + entry.toString());
+                sender.sendMessage(C.info(C.GREEN) + entry.toString());
             }
             return true;
         }else if(args.length == 1) {
             if(EnumUtils.isValidEnum(GunTests.class, args[0].toUpperCase())) {
                 GunTests test = GunTests.valueOf(args[0].toUpperCase());
                 test.toggle();
-                sender.sendMessage(C.warn(C.DBLUE) + "Toggled testing key " + C.highlight(test.name()) + "! Here is the updated key values (status | key | description)");
-                sender.sendMessage(C.info(C.BLUE) + test.toString());
+                sender.sendMessage(C.warn(C.DGREEN) + "Toggled testing key " + C.highlight(test.name()) + "! Here is the updated key values (status | key | description)");
+                sender.sendMessage(C.info(C.GREEN) + test.toString());
             }else {
                 sender.sendMessage(C.cmdFail() + "Invalid Testing Key! Here's a list of possible testing keys: ");
                 sender.sendMessage(C.info(C.RED) + StringUtils.join(Stream.of(GunTests.values()).map(t -> C.highlight(t.name())).collect(Collectors.toList()), ", "));
@@ -41,12 +41,12 @@ public class TestingCommand extends RankOnlyCommand {
         }else if(args.length == 2) {
             if(!args[0].toLowerCase().equalsIgnoreCase("info")) {
                 sender.sendMessage(C.cmdFail() + "Invalid Usage!");
-                sender.sendMessage(C.info(C.RED) + "To see the status of a test, do /test info [key], and to toggle a key, just do /test [key]");
+                sender.sendMessage(C.info(C.RED) + "To see the status of a test, do /guntest info [key], and to toggle a key, just do /guntest [key]");
             }else {
                 if(EnumUtils.isValidEnum(GunTests.class, args[1].toUpperCase())) {
                     GunTests test = GunTests.valueOf(args[1].toUpperCase());
-                    sender.sendMessage(C.highlight("> ", C.B + C.BLUE) + "Info for testing key " + C.highlight(test.name()) + "! (status | key | description)");
-                    sender.sendMessage(C.info(C.BLUE) + test.toString());
+                    sender.sendMessage(C.highlight("> ", C.B + C.GREEN) + "Info for testing key " + C.highlight(test.name()) + "! (status | key | description)");
+                    sender.sendMessage(C.info(C.GREEN) + test.toString());
                 }else {
                     sender.sendMessage(C.cmdFail() + "Invalid Testing Key! Here's a list of possible testing keys: ");
                     sender.sendMessage(C.info(C.RED) + StringUtils.join(Stream.of(GunTests.values()).map(t -> C.highlight(t.name())).collect(Collectors.toList()), ", "));
