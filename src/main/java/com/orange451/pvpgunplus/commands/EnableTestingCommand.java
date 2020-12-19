@@ -14,6 +14,7 @@ import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,5 +51,14 @@ public class EnableTestingCommand extends RankOnlyCommand {
         rec.setEndingTime(System.currentTimeMillis() + length.toMilliseconds());
         rec.insert();
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String alias, String[] args) {
+        if(args.length == 1) {
+            return partialMatches(Stream.of(GunTests.values()).map(GunTests::name).collect(Collectors.toList()), args[0]);
+        }else {
+            return null;
+        }
     }
 }
