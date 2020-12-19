@@ -2,17 +2,24 @@ package com.orange451.pvpgunplus.commands;
 
 import com.brawl.Database;
 import com.brawl.base.BrawlPlayer;
+import com.brawl.base.BrawlPlugin;
 import com.brawl.base.command.RankOnlyCommand;
 import com.brawl.database.minecraft.Tables;
 import com.brawl.database.minecraft.tables.records.WarzTestsRecord;
 import com.brawl.shared.Rank;
 import com.brawl.shared.chat.C;
+import com.brawl.shared.network.message.NetworkChannel;
+import com.brawl.shared.network.message.NetworkMessage;
+import com.brawl.shared.server.ServerType;
+import com.brawl.shared.util.DBUtil;
 import com.brawl.shared.util.Duration;
 import com.orange451.pvpgunplus.GunTests;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jooq.Result;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,14 +52,21 @@ public class EnableTestingCommand extends RankOnlyCommand {
                 return true;
             }
         }
+        Result<WarzTestsRecord> tests = Database.get().selectFrom(Tables.WARZ_TESTS).where(Tables.WARZ_TESTS.KEY.eq("GUN_" + test.name())).fetch();
+        for(WarzTestsRecord rec : tests) {
+            rec.delete();
+            sender.sendMessage(C.cmdFail() + "Overriding an old testing period activated by " + (rec.getActivatedBy() == -1 ? "console" : DBUtil.getPlayerName(rec.getActivatedBy())));
+        }
         WarzTestsRecord rec = Database.get().newRecord(Tables.WARZ_TESTS);
         rec.setKey("GUN_" + test.name());
-        rec.setActivatedBy(BrawlPlayer.of(asPlayer(sender)) == null ? -1 : BrawlPlayer.of(asPlayer(sender)).getId());
+        rec.setActivatedBy(!(sender instanceof Player) || BrawlPlayer.of((Player) sender) == null ? -1 : BrawlPlayer.of(asPlayer(sender)).getId());
         rec.setEndingTime(System.currentTimeMillis() + length.toMilliseconds());
         rec.insert();
         sender.sendMessage(C.cmdSuccess() + "Created testing period for test " + C.highlight(test.name()) + " for " + C.highlight(Duration.ms(rec.getEndingTime()).toString()) + "!");
-        test.set(true, asPlayer(sender));
-        sender.sendMessage(C.cmdSuccess() + "Activated the test!");
+        GunTests.ActivateMessage message = GunTests.ActivateMessage.builder().test(test).activatedBy(rec.getActivatedBy() == -1 ? "Console" : DBUtil.getPlayerName(rec.getActivatedBy())).build();
+        NetworkMessage nm = NetworkMessage.of(message).via(NetworkChannel.DATA).target(ServerType.WARZ, ServerType.TEST);
+        BrawlPlugin.sendClientMessage(nm);
+        sender.sendMessage(C.cmdSuccess() + "Activated the test on all servers!");
         return true;
     }
 

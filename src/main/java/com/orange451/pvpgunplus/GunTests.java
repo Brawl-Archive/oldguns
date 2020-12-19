@@ -5,9 +5,10 @@ package com.orange451.pvpgunplus;
 import com.brawl.Database;
 import com.brawl.database.minecraft.Tables;
 import com.brawl.shared.chat.C;
+import lombok.Builder;
 import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -20,8 +21,8 @@ public enum GunTests {
     public static HashMap<GunTests, Boolean> tests = new HashMap<>();
 
     String desc;
-    Function<Player, Boolean> onEnable;
-    Function<Player, Boolean> onDisable;
+    Function<CommandSender, Boolean> onEnable;
+    Function<CommandSender, Boolean> onDisable;
 
     GunTests() {
         desc = "";
@@ -35,7 +36,7 @@ public enum GunTests {
         onDisable = null;
     }
 
-    GunTests(String desc, Function<Player, Boolean> onEnable, Function<Player, Boolean> onDisable) {
+    GunTests(String desc, Function<CommandSender, Boolean> onEnable, Function<CommandSender, Boolean> onDisable) {
         this.desc = desc;
         this.onEnable = onEnable;
         this.onDisable = onDisable;
@@ -66,7 +67,7 @@ public enum GunTests {
         return tests.get(this);
     }
 
-    public void toggle(Player sender) {
+    public void toggle(CommandSender sender) {
         tests.put(this, !tests.containsKey(this) || !tests.get(this));
         if (isActive() && onEnable != null)
             if (onEnable.apply(sender)) {
@@ -86,7 +87,7 @@ public enum GunTests {
             }
     }
 
-    public void set(boolean b, Player sender) {
+    public void set(boolean b, CommandSender sender) {
         tests.put(this, b);
         if (b) {
             if (onEnable != null) {
@@ -114,5 +115,10 @@ public enum GunTests {
     @Override
     public String toString() {
         return (isActive() ? C.highlight("✔", C.GREEN) : C.highlight("✖", C.RED)) + " | " + C.highlight(name()) + " | " + C.highlight(getDesc());
+    }
+    @Getter @Builder
+    public class ActivateMessage {
+        public String activatedBy;
+        public GunTests test;
     }
 }

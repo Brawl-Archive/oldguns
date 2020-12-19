@@ -1,6 +1,11 @@
 package com.orange451.pvpgunplus;
 
+import com.brawl.base.BrawlClient;
+import com.brawl.base.BrawlPlayer;
+import com.brawl.base.BrawlPlugin;
 import com.brawl.base.util.scheduler.Sync;
+import com.brawl.shared.chat.C;
+import com.brawl.shared.network.message.NetworkChannel;
 import com.orange451.pvpgunplus.commands.EnableTestingCommand;
 import com.orange451.pvpgunplus.commands.TestingCommand;
 import com.orange451.pvpgunplus.gun.*;
@@ -80,6 +85,14 @@ public class PVPGunPlus extends JavaPlugin {
         new TestingCommand().registerCommand();
         new EnableTestingCommand().registerCommand();
         GunTests.init();
+        BrawlPlugin.getInstance().getClientManager().onCreate(client -> {
+           client.onInput(NetworkChannel.DATA, GunTests.ActivateMessage.class, activate -> {
+               activate.getTest().set(true, null);
+               BrawlPlayer.getOnlinePlayers(BrawlPlayer::isStaff).forEach(player -> {
+                   player.sendMessage(C.warn(C.BLUE) + "Test " + C.highlight(activate.getTest().name()) + " has been activated by " + C.highlight(activate.getActivatedBy()) + "!");
+               });
+           });
+        });
 
         startup(true);
 
