@@ -1,19 +1,16 @@
 package com.orange451.pvpgunplus.events;
 
-import org.bukkit.entity.Player;
-
 import com.orange451.pvpgunplus.gun.Gun;
 import com.orange451.pvpgunplus.gun.GunPlayer;
+import org.bukkit.entity.Player;
 
-public class PVPGunPlusFireGunEvent extends PVPGunPlusEvent
-{
-    private Gun gun;
-    private GunPlayer shooter;
+public class PVPGunPlusFireGunEvent extends PVPGunPlusEvent {
+    private final Gun gun;
+    private final GunPlayer shooter;
     private int amountAmmoNeeded;
     private double accuracy;
 
-    public PVPGunPlusFireGunEvent(GunPlayer shooter, Gun gun)
-    {
+    public PVPGunPlusFireGunEvent(GunPlayer shooter, Gun gun) {
         this.gun = gun;
         this.shooter = shooter;
         this.amountAmmoNeeded = gun.getAmmoAmtNeeded();
@@ -24,39 +21,32 @@ public class PVPGunPlusFireGunEvent extends PVPGunPlusEvent
             accuracy = gun.getAccuracy_aimed();
     }
 
-    public PVPGunPlusEvent setAmountAmmoNeeded(int i)
-    {
+    public PVPGunPlusEvent setAmountAmmoNeeded(int i) {
         this.amountAmmoNeeded = i;
         return this;
     }
 
-    public int getAmountAmmoNeeded()
-    {
+    public int getAmountAmmoNeeded() {
         return amountAmmoNeeded;
     }
 
-    public double getGunAccuracy()
-    {
+    public double getGunAccuracy() {
         return accuracy;
     }
 
-    public Gun getGun()
-    {
+    public void setGunAccuracy(double d) {
+        this.accuracy = d;
+    }
+
+    public Gun getGun() {
         return gun;
     }
 
-    public GunPlayer getShooter()
-    {
+    public GunPlayer getShooter() {
         return shooter;
     }
 
-    public Player getShooterAsPlayer()
-    {
+    public Player getShooterAsPlayer() {
         return shooter.getPlayer();
-    }
-
-    public void setGunAccuracy(double d)
-    {
-        this.accuracy = d;
     }
 }

@@ -4,8 +4,8 @@ description: ${description}
 author: ${author}
 website: ${url}
 main: ${mainClass}
-depend: [Base]
-commands: 
+depend: [ Base ]
+commands:
   pvpgunplus:
     description:
     usage:

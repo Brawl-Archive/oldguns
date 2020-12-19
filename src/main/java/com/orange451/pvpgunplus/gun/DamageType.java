@@ -1,6 +1,5 @@
 package com.orange451.pvpgunplus.gun;
 
-public enum DamageType
-{
+public enum DamageType {
     PLAYER, EXPLOSION
 }

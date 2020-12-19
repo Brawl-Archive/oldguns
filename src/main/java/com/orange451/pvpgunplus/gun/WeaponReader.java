@@ -1,26 +1,20 @@
 package com.orange451.pvpgunplus.gun;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
+import com.orange451.pvpgunplus.PVPGunPlus;
 import org.bukkit.Effect;
 
-import com.orange451.pvpgunplus.PVPGunPlus;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
-public class WeaponReader
-{
+public class WeaponReader {
     public PVPGunPlus plugin;
     public boolean loaded = false;
     public File file;
     public String weaponType;
     public Gun ret;
 
-    public WeaponReader(PVPGunPlus plugin, File file, String string)
-    {
+    public WeaponReader(PVPGunPlus plugin, File file, String string) {
         this.plugin = plugin;
         this.file = file;
         this.weaponType = string;
@@ -30,12 +24,9 @@ public class WeaponReader
     }
 
 
-    private void computeData(String str)
-    {
-        try
-        {
-            if (str.indexOf("=") > 0)
-            {
+    private void computeData(String str) {
+        try {
+            if (str.indexOf("=") > 0) {
                 String var = str.substring(0, str.indexOf("=")).toLowerCase();
                 String val = str.substring(str.indexOf("=") + 1);
                 if (var.equals("gunname"))
@@ -133,15 +124,13 @@ public class WeaponReader
                     ret.reloadType = val;
                 if (var.equals("play_effect_on_release")) {
                     String[] effDat = val.split(",");
-                    if (effDat.length == 3)
-                    {
+                    if (effDat.length == 3) {
                         double radius = Double.parseDouble(effDat[0]);
                         int duration = Integer.parseInt(effDat[1]);
                         Effect eff = Effect.valueOf(effDat[2].toUpperCase());
                         EffectType effect = new EffectType(duration, radius, eff);
                         this.ret.releaseEffect = effect;
-                    } else if (effDat.length == 4)
-                    {
+                    } else if (effDat.length == 4) {
                         double radius = Double.parseDouble(effDat[0]);
                         int duration = Integer.parseInt(effDat[1]);
                         Effect eff = Effect.valueOf(effDat[2].toUpperCase());
@@ -152,36 +141,30 @@ public class WeaponReader
                     }
                 }
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             this.loaded = false;
         }
     }
 
-    public void load()
-    {
+    public void load() {
         loaded = true;
         ArrayList<String> file = new ArrayList<String>();
-        try
-        {
+        try {
             FileInputStream fstream = new FileInputStream(this.file.getAbsolutePath());
             DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String strLine;
-            while ((strLine = br.readLine()) != null)
-            {
+            while ((strLine = br.readLine()) != null) {
                 file.add(strLine);
             }
             br.close();
             in.close();
             fstream.close();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
 
-        for (int i = 0; i < file.size(); i++)
-        {
+        for (int i = 0; i < file.size(); i++) {
             computeData(file.get(i));
         }
     }

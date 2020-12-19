@@ -7,7 +7,6 @@ import com.brawl.database.minecraft.Tables;
 import com.brawl.shared.chat.C;
 import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
-
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -48,12 +47,12 @@ public enum GunTests {
         }
         Database.get().selectFrom(Tables.WARZ_TESTS).fetch().stream().filter(g -> g.getKey().startsWith("GUN_")).forEach(rec -> {
             String key = rec.getKey().substring(4).toUpperCase();
-            if(EnumUtils.isValidEnum(GunTests.class, key)) {
+            if (EnumUtils.isValidEnum(GunTests.class, key)) {
                 GunTests test = GunTests.valueOf(key);
-                if(System.currentTimeMillis() < rec.getEndingTime()) {
+                if (System.currentTimeMillis() < rec.getEndingTime()) {
                     test.set(true, null);
                     System.out.println("Activating test " + rec.getKey() + " from database");
-                }else {
+                } else {
                     System.out.println("Deleting test record " + rec.getKey());
                     Database.get().deleteFrom(Tables.WARZ_TESTS).where(Tables.WARZ_TESTS.KEY.eq(rec.getKey())).execute();
                 }
@@ -69,44 +68,43 @@ public enum GunTests {
 
     public void toggle(Player sender) {
         tests.put(this, !tests.containsKey(this) || !tests.get(this));
-        if(isActive() && onEnable != null)
-            if(onEnable.apply(sender)) {
-                if(sender != null)
+        if (isActive() && onEnable != null)
+            if (onEnable.apply(sender)) {
+                if (sender != null)
                     sender.sendMessage(C.cmdSuccess() + "Successfully activated Test " + C.highlight(name()) + "!");
-            }else {
-                if(sender != null)
+            } else {
+                if (sender != null)
                     sender.sendMessage(C.cmdFail() + "Couldn't activate test " + C.highlight(name()) + "!");
             }
-        else
-        if(onDisable != null)
-            if(onDisable.apply(sender)) {
-                if(sender != null)
+        else if (onDisable != null)
+            if (onDisable.apply(sender)) {
+                if (sender != null)
                     sender.sendMessage(C.cmdSuccess() + "Successfully deactivated Test " + C.highlight(name()) + "!");
-            }else {
-                if(sender != null)
+            } else {
+                if (sender != null)
                     sender.sendMessage(C.cmdFail() + "Couldn't deactivate test " + C.highlight(name()) + "!");
             }
     }
 
     public void set(boolean b, Player sender) {
         tests.put(this, b);
-        if(b) {
-            if(onEnable != null) {
-                if(onEnable.apply(sender)) {
-                    if(sender != null)
+        if (b) {
+            if (onEnable != null) {
+                if (onEnable.apply(sender)) {
+                    if (sender != null)
                         sender.sendMessage(C.cmdSuccess() + "Successfully activated Test " + C.highlight(name()) + "!");
-                }else {
-                    if(sender != null)
+                } else {
+                    if (sender != null)
                         sender.sendMessage(C.cmdFail() + "Couldn't activate test " + C.highlight(name()) + "!");
                 }
             }
-        }else {
-            if(onDisable != null) {
-                if(onDisable.apply(sender)) {
-                    if(sender != null)
+        } else {
+            if (onDisable != null) {
+                if (onDisable.apply(sender)) {
+                    if (sender != null)
                         sender.sendMessage(C.cmdSuccess() + "Successfully deactivated Test " + C.highlight(name()) + "!");
-                }else {
-                    if(sender != null)
+                } else {
+                    if (sender != null)
                         sender.sendMessage(C.cmdFail() + "Couldn't deactivate test " + C.highlight(name()) + "!");
                 }
             }

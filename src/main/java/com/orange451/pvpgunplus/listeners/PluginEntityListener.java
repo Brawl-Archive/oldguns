@@ -1,31 +1,5 @@
 package com.orange451.pvpgunplus.listeners;
 
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-
-import com.brawl.base.util.scheduler.Sync;
 import com.brawl.shared.util.Duration;
 import com.orange451.pvpgunplus.PVPGunPlus;
 import com.orange451.pvpgunplus.events.PVPGunPlusBulletCollideEvent;
@@ -34,27 +8,41 @@ import com.orange451.pvpgunplus.events.PVPGunPlusGunKillEntityEvent;
 import com.orange451.pvpgunplus.gun.Bullet;
 import com.orange451.pvpgunplus.gun.Gun;
 import com.orange451.pvpgunplus.gun.GunPlayer;
-
 import lombok.Data;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PluginEntityListener implements Listener
-{
-    PVPGunPlus plugin;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+public class PluginEntityListener implements Listener {
     public Map<UUID, PStat> stackedDamage = new HashMap<>();
-    
-    public PluginEntityListener(PVPGunPlus plugin)
-    {
+    PVPGunPlus plugin;
+
+    public PluginEntityListener(PVPGunPlus plugin) {
         this.plugin = plugin;
     }
 
     private void clearStackedDmg(UUID uuid) {
-    	stackedDamage.remove(uuid);
+        stackedDamage.remove(uuid);
     }
-    
+
     @EventHandler(priority = EventPriority.HIGH)
-    public void onEntityExplode(EntityExplodeEvent event)
-    {
+    public void onEntityExplode(EntityExplodeEvent event) {
         event.setCancelled(true);
     }
 
@@ -65,19 +53,17 @@ public class PluginEntityListener implements Listener
         ep.maxNoDamageTicks = 20;
         ep.noDamageTicks = 20;
     }
-    
+
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-    	clearStackedDmg(event.getPlayer().getUniqueId());
+        clearStackedDmg(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onProjectileHit(ProjectileHitEvent event)
-    {
+    public void onProjectileHit(ProjectileHitEvent event) {
         Projectile check = event.getEntity();
         Bullet bullet = PVPGunPlus.getPlugin().getBullet(check);
-        if (bullet != null)
-        {
+        if (bullet != null) {
             bullet.onHit();
             if (bullet.destroyWhenHit)
                 bullet.setNextTickDestroy();
@@ -111,8 +97,7 @@ public class PluginEntityListener implements Listener
             PVPGunPlusBulletCollideEvent evv = new PVPGunPlusBulletCollideEvent(bullet.getShooter(), bullet.getGun(), b);
             evv.callEvent();
 
-            if (bullet.destroyWhenHit)
-            {
+            if (bullet.destroyWhenHit) {
                 bullet.remove();
                 event.getEntity().remove();
             }
@@ -120,22 +105,17 @@ public class PluginEntityListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         Entity dead = event.getEntity();
-        if (dead.getLastDamageCause() != null)
-        {
+        if (dead.getLastDamageCause() != null) {
             EntityDamageEvent e = dead.getLastDamageCause();
-            if (e instanceof EntityDamageByEntityEvent)
-            {
+            if (e instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent ede = (EntityDamageByEntityEvent) e;
                 Entity damager = ede.getDamager();
-                if (damager instanceof Projectile)
-                {
+                if (damager instanceof Projectile) {
                     Projectile proj = (Projectile) (damager);
                     Bullet bullet = PVPGunPlus.getPlugin().getBullet(proj);
-                    if (bullet != null)
-                    {
+                    if (bullet != null) {
                         Gun used = bullet.getGun();
                         GunPlayer shooter = bullet.getShooter();
 
@@ -148,59 +128,54 @@ public class PluginEntityListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDamage(final EntityDamageEvent event)
-    {
-    	Entity entity = event.getEntity();
-    	if (!(entity instanceof LivingEntity))
-    		return;
-    	DamageCause cause = event.getCause();
-    	
-    	if(cause == DamageCause.VOID)
-    		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PVPGunPlus.resetPlayerDamage((LivingEntity) entity, 0), 1);
-    	
-    	if(!event.isCancelled() && (cause == DamageCause.FIRE || cause == DamageCause.LAVA || cause == DamageCause.FIRE_TICK)) {
-    		event.setCancelled(true);
-    		
-    		PStat stat;
-    		
-    		if(stackedDamage.containsKey(entity.getUniqueId()))
-    			stat = stackedDamage.get(entity.getUniqueId());
-    		else {
-    			stat = new PStat();
-    			stackedDamage.put(entity.getUniqueId(), stat);
-    		}
-    		
-    		if(PStat.DELAY_HIT.toMilliseconds() > System.currentTimeMillis() - stat.lastHit)
-    			return;
-    		
-    		stat.lent = (LivingEntity)entity;
-    		stat.stackedDamage.add(event.getFinalDamage());
-    		stat.lastHit = System.currentTimeMillis();
-    		return;
-    	}
-    	
-    	if (cause != DamageCause.PROJECTILE  && cause != DamageCause.FALL) {
-    		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PVPGunPlus.resetPlayerDamage((LivingEntity) entity, 20), 1);
-    	}
+    public void onEntityDamage(final EntityDamageEvent event) {
+        Entity entity = event.getEntity();
+        if (!(entity instanceof LivingEntity))
+            return;
+        DamageCause cause = event.getCause();
+
+        if (cause == DamageCause.VOID)
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PVPGunPlus.resetPlayerDamage((LivingEntity) entity, 0), 1);
+
+        if (!event.isCancelled() && (cause == DamageCause.FIRE || cause == DamageCause.LAVA || cause == DamageCause.FIRE_TICK)) {
+            event.setCancelled(true);
+
+            PStat stat;
+
+            if (stackedDamage.containsKey(entity.getUniqueId()))
+                stat = stackedDamage.get(entity.getUniqueId());
+            else {
+                stat = new PStat();
+                stackedDamage.put(entity.getUniqueId(), stat);
+            }
+
+            if (PStat.DELAY_HIT.toMilliseconds() > System.currentTimeMillis() - stat.lastHit)
+                return;
+
+            stat.lent = (LivingEntity) entity;
+            stat.stackedDamage.add(event.getFinalDamage());
+            stat.lastHit = System.currentTimeMillis();
+            return;
+        }
+
+        if (cause != DamageCause.PROJECTILE && cause != DamageCause.FALL) {
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PVPGunPlus.resetPlayerDamage((LivingEntity) entity, 20), 1);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
-    {
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.isCancelled())
             return;
         Entity damager = event.getDamager();
         boolean isBullet = false;
 
-        if (event.getEntity() instanceof LivingEntity)
-        {
+        if (event.getEntity() instanceof LivingEntity) {
             LivingEntity hurt = (LivingEntity) event.getEntity();
-            if (damager instanceof Projectile)
-            {
+            if (damager instanceof Projectile) {
                 Projectile proj = (Projectile) (damager);
                 Bullet bullet = PVPGunPlus.getPlugin().getBullet(proj);
-                if (bullet != null)
-                {
+                if (bullet != null) {
                     boolean headshot = false;
                     if (isNear(proj.getLocation(), hurt.getEyeLocation(), 0.26D) && bullet.getGun().canHeadShot()) {
                         headshot = true;
@@ -208,11 +183,10 @@ public class PluginEntityListener implements Listener
                     PVPGunPlusGunDamageEntityEvent pvpgundmg = new PVPGunPlusGunDamageEntityEvent(event, bullet.getShooter(), bullet.getGun(), event.getEntity(), headshot);
                     pvpgundmg.callEvent();
                     if (!pvpgundmg.isCancelled() /*&& !(hurt instanceof Player && ((Player) hurt).isInvulnerable())*/) {
-                    	PVPGunPlus.resetPlayerDamage(hurt, 0);
+                        PVPGunPlus.resetPlayerDamage(hurt, 0);
                         double damage = pvpgundmg.getDamage();
                         double mult = 1.0D;
-                        if (pvpgundmg.isHeadshot())
-                        {
+                        if (pvpgundmg.isHeadshot()) {
                             PVPGunPlus.playEffect(Effect.ZOMBIE_DESTROY_DOOR, hurt.getLocation(), 3);
                             mult = 2D;
                         }
@@ -223,7 +197,7 @@ public class PluginEntityListener implements Listener
                         //System.out.println(event.getDamage());
                         int armorPenetration = pvpgundmg.getArmorPenetration();
                         if (armorPenetration > 0) {
-                            int health = (int) ((Damageable) hurt).getHealth();
+                            int health = (int) hurt.getHealth();
                             int newHealth = health - armorPenetration;
                             if (newHealth < 0)
                                 newHealth = 0;
@@ -231,14 +205,13 @@ public class PluginEntityListener implements Listener
                                 newHealth = 20;
                             hurt.setHealth(newHealth);
                         }
-                        
+
                         bullet.getGun().doKnockback(hurt, bullet.getVelocity());
 
                         if (bullet.destroyWhenHit)
                             bullet.remove();
 
-                        if (bullet.bulletType.equals("crossbow"))
-                        {
+                        if (bullet.bulletType.equals("crossbow")) {
                             bullet.setStuckTo(hurt);
                             //System.out.println("STUCK GRENADE");
                         }
@@ -246,8 +219,7 @@ public class PluginEntityListener implements Listener
 
                         PVPGunPlus.resetPlayerDamage(hurt, 0);
                         isBullet = true;
-                    } else
-                    {
+                    } else {
                         event.setCancelled(true);
                     }
                 }
@@ -258,19 +230,18 @@ public class PluginEntityListener implements Listener
         }
     }
 
-    private boolean isNear(Location location, Location eyeLocation, double d)
-    {
+    private boolean isNear(Location location, Location eyeLocation, double d) {
         return Math.abs(location.getY() - eyeLocation.getY()) <= d;
     }
-    
+
     @Data
-	public static class PStat {
-    	
-    	public static final Duration DELAY_HIT = Duration.ticks(15);
-    	
-    	private LivingEntity lent;
-    	private long lastHit = 0;
-    	private ArrayDeque<Double> stackedDamage = new ArrayDeque<>();
-    	
+    public static class PStat {
+
+        public static final Duration DELAY_HIT = Duration.ticks(15);
+
+        private LivingEntity lent;
+        private long lastHit = 0;
+        private ArrayDeque<Double> stackedDamage = new ArrayDeque<>();
+
     }
 }

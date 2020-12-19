@@ -1,48 +1,48 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>me.paul</groupId>
-		<artifactId>parent-plugin</artifactId>
-		<version>1.5-SNAPSHOT</version>
-		<relativePath>../parent/parent-plugin/pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>me.paul</groupId>
+        <artifactId>parent-plugin</artifactId>
+        <version>1.5-SNAPSHOT</version>
+        <relativePath>../parent/parent-plugin/pom.xml</relativePath>
+    </parent>
 
-	<artifactId>oldguns</artifactId>
-	<version>1.5-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <artifactId>oldguns</artifactId>
+    <version>1.5-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<name>OldGuns</name>
-	<url>https://www.brawl.com</url>
-	<description>Deprecated old Guns plugin that we still use for some reason</description>
+    <name>OldGuns</name>
+    <url>https://www.brawl.com</url>
+    <description>Deprecated old Guns plugin that we still use for some reason</description>
 
-	<properties>
-		<author>Orange</author>
-		<mainClass>com.orange451.pvpgunplus.PVPGunPlus</mainClass>
-	</properties>
+    <properties>
+        <author>Orange</author>
+        <mainClass>com.orange451.pvpgunplus.PVPGunPlus</mainClass>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.psykospigot</groupId>
-			<artifactId>spigot</artifactId>
-			<version>1.0.3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>me.paul</groupId>
-			<artifactId>base</artifactId>
-			<version>1.5-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.psykospigot</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.paul</groupId>
+            <artifactId>base</artifactId>
+            <version>1.5-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.16.10</version>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
-	
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
 </project>
