@@ -30,7 +30,7 @@ public class TestingCommand extends RankOnlyCommand {
         }else if(args.length == 1) {
             if(EnumUtils.isValidEnum(GunTests.class, args[0].toUpperCase())) {
                 GunTests test = GunTests.valueOf(args[0].toUpperCase());
-                test.toggle();
+                test.toggle(asPlayer(sender));
                 sender.sendMessage(C.warn(C.DGREEN) + "Toggled testing key " + C.highlight(test.name()) + "! Here is the updated key values (status | key | description)");
                 sender.sendMessage(C.info(C.GREEN) + test.toString());
             }else {

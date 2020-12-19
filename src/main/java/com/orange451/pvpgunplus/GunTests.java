@@ -1,9 +1,17 @@
+//FLASH_TURNING("cs flashbangs (you can turn from them)"),
+//WAR_MOLLY("Molotovs ported from war xd");
 package com.orange451.pvpgunplus;
 
+import com.brawl.Database;
+import com.brawl.database.minecraft.Tables;
 import com.brawl.shared.chat.C;
 import lombok.Getter;
+import org.apache.commons.lang3.EnumUtils;
+
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.function.Function;
 
 @Getter
 public enum GunTests {
@@ -13,41 +21,96 @@ public enum GunTests {
     public static HashMap<GunTests, Boolean> tests = new HashMap<>();
 
     String desc;
-    Runnable onEnable;
-    Runnable onDisable;
+    Function<Player, Boolean> onEnable;
+    Function<Player, Boolean> onDisable;
 
     GunTests() {
         desc = "";
         onEnable = null;
         onDisable = null;
     }
+
     GunTests(String desc) {
         this.desc = desc;
         onEnable = null;
         onDisable = null;
     }
-    GunTests(String desc, Runnable onEnable, Runnable onDisable) {
+
+    GunTests(String desc, Function<Player, Boolean> onEnable, Function<Player, Boolean> onDisable) {
         this.desc = desc;
-        onEnable = null;
-        onDisable = null;
+        this.onEnable = onEnable;
+        this.onDisable = onDisable;
     }
+
     public static void init() {
-        for(GunTests t : GunTests.values()) {
+        for (GunTests t : GunTests.values()) {
             tests.put(t, false);
         }
+        Database.get().selectFrom(Tables.WARZ_TESTS).fetch().stream().filter(g -> g.getKey().startsWith("GUN_")).forEach(rec -> {
+            String key = rec.getKey().substring(4).toUpperCase();
+            if(EnumUtils.isValidEnum(GunTests.class, key)) {
+                GunTests test = GunTests.valueOf(key);
+                if(System.currentTimeMillis() < rec.getEndingTime()) {
+                    test.set(true, null);
+                    System.out.println("Activating test " + rec.getKey() + " from database");
+                }else {
+                    System.out.println("Deleting test record " + rec.getKey());
+                    Database.get().deleteFrom(Tables.WARZ_TESTS).where(Tables.WARZ_TESTS.KEY.eq(rec.getKey())).execute();
+                }
+            }
+        });
     }
+
     public boolean isActive() {
-        if(!tests.containsKey(this))
+        if (!tests.containsKey(this))
             return false;
         return tests.get(this);
     }
-    public void toggle() {
-        if(!tests.containsKey(this))
-            tests.put(this, true);
-        else tests.put(this, !tests.get(this));
+
+    public void toggle(Player sender) {
+        tests.put(this, !tests.containsKey(this) || !tests.get(this));
+        if(isActive() && onEnable != null)
+            if(onEnable.apply(sender)) {
+                if(sender != null)
+                    sender.sendMessage(C.cmdSuccess() + "Successfully activated Test " + C.highlight(name()) + "!");
+            }else {
+                if(sender != null)
+                    sender.sendMessage(C.cmdFail() + "Couldn't activate test " + C.highlight(name()) + "!");
+            }
+        else
+        if(onDisable != null)
+            if(onDisable.apply(sender)) {
+                if(sender != null)
+                    sender.sendMessage(C.cmdSuccess() + "Successfully deactivated Test " + C.highlight(name()) + "!");
+            }else {
+                if(sender != null)
+                    sender.sendMessage(C.cmdFail() + "Couldn't deactivate test " + C.highlight(name()) + "!");
+            }
     }
-    public void set(boolean b) {
+
+    public void set(boolean b, Player sender) {
         tests.put(this, b);
+        if(b) {
+            if(onEnable != null) {
+                if(onEnable.apply(sender)) {
+                    if(sender != null)
+                        sender.sendMessage(C.cmdSuccess() + "Successfully activated Test " + C.highlight(name()) + "!");
+                }else {
+                    if(sender != null)
+                        sender.sendMessage(C.cmdFail() + "Couldn't activate test " + C.highlight(name()) + "!");
+                }
+            }
+        }else {
+            if(onDisable != null) {
+                if(onDisable.apply(sender)) {
+                    if(sender != null)
+                        sender.sendMessage(C.cmdSuccess() + "Successfully deactivated Test " + C.highlight(name()) + "!");
+                }else {
+                    if(sender != null)
+                        sender.sendMessage(C.cmdFail() + "Couldn't deactivate test " + C.highlight(name()) + "!");
+                }
+            }
+        }
     }
 
     @Override

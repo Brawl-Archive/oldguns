@@ -1,6 +1,7 @@
 package com.orange451.pvpgunplus;
 
 import com.brawl.base.util.scheduler.Sync;
+import com.orange451.pvpgunplus.commands.EnableTestingCommand;
 import com.orange451.pvpgunplus.commands.TestingCommand;
 import com.orange451.pvpgunplus.gun.*;
 import com.orange451.pvpgunplus.listeners.PluginEntityListener;
@@ -51,6 +52,7 @@ public class PVPGunPlus extends JavaPlugin
         pm.registerEvents(this.playerListener, this);
         pm.registerEvents(this.entityListener, this);
         new TestingCommand().registerCommand();
+        new EnableTestingCommand().registerCommand();
         GunTests.init();
 
         startup(true);
