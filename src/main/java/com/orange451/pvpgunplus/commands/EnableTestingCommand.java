@@ -44,7 +44,7 @@ public class EnableTestingCommand extends RankOnlyCommand {
         GunTests test = GunTests.valueOf(args[0].toUpperCase());
         Duration length;
         if (NumberUtils.isNumber(args[1])) {
-            length = Duration.days(30);
+            length = Duration.days(Integer.parseInt(args[1]));
         } else {
             length = Duration.valueOf(args[1]);
             if (length.toMilliseconds() == 0) {
