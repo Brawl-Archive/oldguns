@@ -50,7 +50,7 @@ public class EnableTestingCommand extends RankOnlyCommand {
         rec.setActivatedBy(BrawlPlayer.of(asPlayer(sender)) == null ? -1 : BrawlPlayer.of(asPlayer(sender)).getId());
         rec.setEndingTime(System.currentTimeMillis() + length.toMilliseconds());
         rec.insert();
-        sender.sendMessage(C.cmdSuccess() + "Created testing period for test " + C.highlight(test.name()) + " for " + C.highlight(length.toString()) + "!");
+        sender.sendMessage(C.cmdSuccess() + "Created testing period for test " + C.highlight(test.name()) + " for " + C.highlight(Duration.ms(rec.getEndingTime()).toString()) + "!");
         test.set(true, asPlayer(sender));
         sender.sendMessage(C.cmdSuccess() + "Activated the test!");
         return true;
