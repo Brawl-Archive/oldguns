@@ -10,7 +10,7 @@ import com.orange451.pvpgunplus.events.PVPGunPlusGunKillEntityEvent;
 import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent;
 import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent.ProjectileType;
 import com.orange451.pvpgunplus.gun.util.CustomExplosion;
-import com.orange451.pvpgunplus.gun.util.Vec3;
+import com.brawl.shared.util.math.Vec3;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
