@@ -1,11 +1,11 @@
 package com.orange451.pvpgunplus.gun;
 
-import com.orange451.pvpgunplus.PVPGunPlus;
-import org.bukkit.Effect;
+import com.orange451.pvpgunplus.*;
+import org.bukkit.*;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.nio.charset.*;
+import java.util.*;
 
 public class WeaponReader {
     public PVPGunPlus plugin;

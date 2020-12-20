@@ -2,16 +2,15 @@
 //WAR_MOLLY("Molotovs ported from war xd");
 package com.orange451.pvpgunplus;
 
-import com.brawl.Database;
-import com.brawl.database.minecraft.Tables;
-import com.brawl.shared.chat.C;
-import lombok.Builder;
-import lombok.Getter;
-import org.apache.commons.lang3.EnumUtils;
-import org.bukkit.command.CommandSender;
+import com.brawl.*;
+import com.brawl.database.minecraft.*;
+import com.brawl.shared.chat.*;
+import lombok.*;
+import org.apache.commons.lang3.*;
+import org.bukkit.command.*;
 
-import java.util.HashMap;
-import java.util.function.Function;
+import java.util.*;
+import java.util.function.*;
 
 @Getter
 public enum GunTests {

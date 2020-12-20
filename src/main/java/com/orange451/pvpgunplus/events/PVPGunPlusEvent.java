@@ -1,7 +1,7 @@
 package com.orange451.pvpgunplus.events;
 
-import com.brawl.base.event.BaseEvent;
-import org.bukkit.event.Cancellable;
+import com.brawl.base.event.*;
+import org.bukkit.event.*;
 
 public class PVPGunPlusEvent extends BaseEvent implements Cancellable {
 

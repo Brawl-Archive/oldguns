@@ -1,9 +1,8 @@
 package com.orange451.pvpgunplus.events;
 
-import com.orange451.pvpgunplus.gun.Gun;
-import com.orange451.pvpgunplus.gun.GunPlayer;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import com.orange451.pvpgunplus.gun.*;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
 
 public class PVPGunPlusBulletCollideEvent extends PVPGunPlusEvent {
     private final Gun gun;

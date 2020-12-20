@@ -1,29 +1,24 @@
 package com.orange451.pvpgunplus.commands;
 
-import com.brawl.Database;
-import com.brawl.base.BrawlPlayer;
-import com.brawl.base.BrawlPlugin;
-import com.brawl.base.command.RankOnlyCommand;
-import com.brawl.database.minecraft.Tables;
-import com.brawl.database.minecraft.tables.records.WarzTestsRecord;
-import com.brawl.shared.Rank;
-import com.brawl.shared.chat.C;
-import com.brawl.shared.network.message.NetworkChannel;
-import com.brawl.shared.network.message.NetworkMessage;
-import com.brawl.shared.server.ServerType;
-import com.brawl.shared.util.DBUtil;
-import com.brawl.shared.util.Duration;
-import com.orange451.pvpgunplus.GunTests;
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.lang3.EnumUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jooq.Result;
+import com.brawl.*;
+import com.brawl.base.*;
+import com.brawl.base.command.*;
+import com.brawl.database.minecraft.*;
+import com.brawl.database.minecraft.tables.records.*;
+import com.brawl.shared.*;
+import com.brawl.shared.chat.*;
+import com.brawl.shared.network.message.*;
+import com.brawl.shared.server.*;
+import com.brawl.shared.util.*;
+import com.orange451.pvpgunplus.*;
+import org.apache.commons.lang.math.*;
+import org.apache.commons.lang3.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.jooq.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.stream.*;
 
 public class EnableTestingCommand extends RankOnlyCommand {
     public EnableTestingCommand() {

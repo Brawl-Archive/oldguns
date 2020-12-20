@@ -1,23 +1,16 @@
 package com.orange451.pvpgunplus.gun;
 
-import com.brawl.base.util.scheduler.Sync;
-import com.orange451.pvpgunplus.InventoryHelper;
-import com.orange451.pvpgunplus.PVPGunPlus;
-import com.orange451.pvpgunplus.PermissionInterface;
-import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import com.brawl.base.util.scheduler.*;
+import com.orange451.pvpgunplus.*;
+import lombok.*;
+import org.bukkit.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.entity.*;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.*;
+import org.bukkit.potion.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class GunPlayer {
 
