@@ -53,7 +53,7 @@ public class EnableTestingCommand extends RankOnlyCommand {
             }
         }
         Result<WarzTestsRecord> tests = Database.get().selectFrom(Tables.WARZ_TESTS).where(Tables.WARZ_TESTS.KEY.eq("GUN_" + test.name())).fetch();
-        for(WarzTestsRecord rec : tests) {
+        for (WarzTestsRecord rec : tests) {
             rec.delete();
             sender.sendMessage(C.cmdFail() + "Overriding an old testing period activated by " + (rec.getActivatedBy() == -1 ? "console" : DBUtil.getPlayerName(rec.getActivatedBy())));
         }

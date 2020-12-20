@@ -2,6 +2,7 @@ package com.orange451.pvpgunplus.gun;
 
 import com.brawl.base.util.scheduler.Sync;
 import com.brawl.shared.util.Duration;
+import com.brawl.shared.util.math.Vec3;
 import com.orange451.pvpgunplus.GunTests;
 import com.orange451.pvpgunplus.PVPGunExplosion;
 import com.orange451.pvpgunplus.PVPGunPlus;
@@ -10,7 +11,6 @@ import com.orange451.pvpgunplus.events.PVPGunPlusGunKillEntityEvent;
 import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent;
 import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent.ProjectileType;
 import com.orange451.pvpgunplus.gun.util.CustomExplosion;
-import com.brawl.shared.util.math.Vec3;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;

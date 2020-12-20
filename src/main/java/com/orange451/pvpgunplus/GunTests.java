@@ -116,7 +116,9 @@ public enum GunTests {
     public String toString() {
         return (isActive() ? C.highlight("✔", C.GREEN) : C.highlight("✖", C.RED)) + " | " + C.highlight(name()) + " | " + C.highlight(getDesc());
     }
-    @Getter @Builder
+
+    @Getter
+    @Builder
     public static class ActivateMessage {
         public String activatedBy;
         public GunTests test;
