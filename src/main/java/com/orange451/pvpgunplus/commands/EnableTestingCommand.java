@@ -62,7 +62,7 @@ public class EnableTestingCommand extends RankOnlyCommand {
         rec.setActivatedBy(!(sender instanceof Player) || BrawlPlayer.of((Player) sender) == null ? -1 : BrawlPlayer.of(asPlayer(sender)).getId());
         rec.setEndingTime(System.currentTimeMillis() + length.toMilliseconds());
         rec.insert();
-        sender.sendMessage(C.cmdSuccess() + "Created testing period for test " + C.highlight(test.name()) + " for " + C.highlight(Duration.ms(rec.getEndingTime()).toString()) + "!");
+        sender.sendMessage(C.cmdSuccess() + "Created testing period for test " + C.highlight(test.name()) + " for " + C.highlight(length.toString()) + "!");
         GunTests.ActivateMessage message = GunTests.ActivateMessage.builder().test(test).activatedBy(rec.getActivatedBy() == -1 ? "Console" : DBUtil.getPlayerName(rec.getActivatedBy())).build();
         NetworkMessage nm = NetworkMessage.of(message).via(NetworkChannel.DATA).target(ServerType.WARZ, ServerType.TEST);
         BrawlPlugin.sendClientMessage(nm);
