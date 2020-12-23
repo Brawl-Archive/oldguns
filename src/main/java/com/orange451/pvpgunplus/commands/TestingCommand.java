@@ -1,14 +1,17 @@
 package com.orange451.pvpgunplus.commands;
 
-import com.brawl.base.command.*;
-import com.brawl.shared.*;
-import com.brawl.shared.chat.*;
-import com.orange451.pvpgunplus.*;
-import org.apache.commons.lang3.*;
-import org.bukkit.command.*;
+import com.brawl.base.command.RankOnlyCommand;
+import com.brawl.shared.Rank;
+import com.brawl.shared.chat.C;
+import com.orange451.pvpgunplus.GunTests;
+import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.bukkit.command.CommandSender;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TestingCommand extends RankOnlyCommand {
     public TestingCommand() {

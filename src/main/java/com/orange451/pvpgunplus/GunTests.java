@@ -2,15 +2,16 @@
 //WAR_MOLLY("Molotovs ported from war xd");
 package com.orange451.pvpgunplus;
 
-import com.brawl.*;
-import com.brawl.database.minecraft.*;
-import com.brawl.shared.chat.*;
-import lombok.*;
-import org.apache.commons.lang3.*;
-import org.bukkit.command.*;
+import com.brawl.Database;
+import com.brawl.database.warz.Tables;
+import com.brawl.shared.chat.C;
+import lombok.Builder;
+import lombok.Getter;
+import org.apache.commons.lang3.EnumUtils;
+import org.bukkit.command.CommandSender;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.HashMap;
+import java.util.function.Function;
 
 @Getter
 public enum GunTests {
@@ -45,7 +46,7 @@ public enum GunTests {
         for (GunTests t : GunTests.values()) {
             tests.put(t, false);
         }
-        Database.get().selectFrom(Tables.WARZ_TESTS).fetch().stream().filter(g -> g.getKey().startsWith("GUN_")).forEach(rec -> {
+        Database.get().selectFrom(Tables.TESTS).fetch().stream().filter(g -> g.getKey().startsWith("GUN_")).forEach(rec -> {
             String key = rec.getKey().substring(4).toUpperCase();
             if (EnumUtils.isValidEnum(GunTests.class, key)) {
                 GunTests test = GunTests.valueOf(key);
@@ -54,7 +55,7 @@ public enum GunTests {
                     System.out.println("Activating test " + rec.getKey() + " from database");
                 } else {
                     System.out.println("Deleting test record " + rec.getKey());
-                    Database.get().deleteFrom(Tables.WARZ_TESTS).where(Tables.WARZ_TESTS.KEY.eq(rec.getKey())).execute();
+                    Database.get().deleteFrom(Tables.TESTS).where(Tables.TESTS.KEY.eq(rec.getKey())).execute();
                 }
             }
         });

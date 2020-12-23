@@ -1,22 +1,33 @@
 package com.orange451.pvpgunplus.listeners;
 
-import com.brawl.shared.util.*;
-import com.orange451.pvpgunplus.*;
-import com.orange451.pvpgunplus.events.*;
-import com.orange451.pvpgunplus.gun.*;
-import lombok.*;
-import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.*;
+import com.brawl.shared.util.Duration;
+import com.orange451.pvpgunplus.PVPGunPlus;
+import com.orange451.pvpgunplus.events.PVPGunPlusBulletCollideEvent;
+import com.orange451.pvpgunplus.events.PVPGunPlusGunDamageEntityEvent;
+import com.orange451.pvpgunplus.events.PVPGunPlusGunKillEntityEvent;
+import com.orange451.pvpgunplus.gun.Bullet;
+import com.orange451.pvpgunplus.gun.Gun;
+import com.orange451.pvpgunplus.gun.GunPlayer;
+import lombok.Data;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
+import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.entity.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.entity.EntityDamageEvent.*;
-import org.bukkit.event.player.*;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PluginEntityListener implements Listener {
     public Map<UUID, PStat> stackedDamage = new HashMap<>();

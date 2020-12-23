@@ -1,9 +1,11 @@
 package com.orange451.pvpgunplus.gun.util;
 
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class ExplosionsUtil {
 

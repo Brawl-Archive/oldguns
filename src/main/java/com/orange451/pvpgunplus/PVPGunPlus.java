@@ -1,23 +1,32 @@
 package com.orange451.pvpgunplus;
 
-import com.brawl.base.*;
-import com.brawl.base.util.scheduler.*;
-import com.brawl.shared.chat.*;
-import com.brawl.shared.network.message.*;
-import com.orange451.pvpgunplus.commands.*;
+import com.brawl.base.BrawlPlayer;
+import com.brawl.base.BrawlPlugin;
+import com.brawl.base.util.scheduler.Sync;
+import com.brawl.shared.chat.C;
+import com.brawl.shared.network.message.NetworkChannel;
+import com.orange451.pvpgunplus.commands.EnableTestingCommand;
+import com.orange451.pvpgunplus.commands.TestingCommand;
 import com.orange451.pvpgunplus.gun.*;
-import com.orange451.pvpgunplus.listeners.*;
-import com.orange451.pvpgunplus.listeners.PluginEntityListener.*;
-import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_8_R3.entity.*;
+import com.orange451.pvpgunplus.listeners.PluginEntityListener;
+import com.orange451.pvpgunplus.listeners.PluginEntityListener.PStat;
+import com.orange451.pvpgunplus.listeners.PluginPlayerListener;
+import net.minecraft.server.v1_8_R3.DamageSource;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.*;
-import org.bukkit.plugin.*;
-import org.bukkit.plugin.java.*;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class PVPGunPlus extends JavaPlugin {
     public static PVPGunPlus plugin;

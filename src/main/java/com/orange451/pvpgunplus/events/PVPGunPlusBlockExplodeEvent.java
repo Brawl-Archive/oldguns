@@ -1,7 +1,7 @@
 package com.orange451.pvpgunplus.events;
 
-import com.orange451.pvpgunplus.*;
-import lombok.*;
+import com.orange451.pvpgunplus.PVPGunExplosion;
+import lombok.Getter;
 
 @Getter
 public class PVPGunPlusBlockExplodeEvent extends PVPGunPlusEvent {

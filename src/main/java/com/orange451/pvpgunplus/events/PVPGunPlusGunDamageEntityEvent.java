@@ -1,12 +1,17 @@
 package com.orange451.pvpgunplus.events;
 
-import com.orange451.pvpgunplus.gun.*;
-import lombok.*;
-import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.craftbukkit.v1_8_R3.entity.*;
+import com.orange451.pvpgunplus.gun.Gun;
+import com.orange451.pvpgunplus.gun.GunPlayer;
+import lombok.Getter;
+import net.minecraft.server.v1_8_R3.DamageSource;
+import net.minecraft.server.v1_8_R3.EnchantmentManager;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.MobEffectList;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.*;
-import org.bukkit.event.entity.*;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class PVPGunPlusGunDamageEntityEvent extends PVPGunPlusEvent {
     private final Gun gun;

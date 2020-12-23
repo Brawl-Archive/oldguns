@@ -1,20 +1,30 @@
 package com.orange451.pvpgunplus.listeners;
 
-import com.brawl.base.*;
-import com.brawl.shared.chat.*;
-import com.brawl.shared.server.*;
-import com.orange451.pvpgunplus.*;
-import com.orange451.pvpgunplus.gun.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.block.*;
-import org.bukkit.event.entity.*;
-import org.bukkit.event.entity.EntityDamageEvent.*;
+import com.brawl.base.BrawlPlugin;
+import com.brawl.shared.chat.C;
+import com.brawl.shared.server.ServerType;
+import com.orange451.pvpgunplus.PVPGunPlus;
+import com.orange451.pvpgunplus.PermissionInterface;
+import com.orange451.pvpgunplus.gun.Gun;
+import com.orange451.pvpgunplus.gun.GunPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class PluginPlayerListener implements Listener {
     private final PVPGunPlus plugin;

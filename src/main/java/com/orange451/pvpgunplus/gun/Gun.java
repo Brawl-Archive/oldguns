@@ -1,14 +1,20 @@
 package com.orange451.pvpgunplus.gun;
 
-import com.orange451.pvpgunplus.*;
-import com.orange451.pvpgunplus.events.*;
-import lombok.*;
+import com.orange451.pvpgunplus.InventoryHelper;
+import com.orange451.pvpgunplus.PVPGunPlus;
+import com.orange451.pvpgunplus.events.PVPGunPlusFireGunEvent;
+import com.orange451.pvpgunplus.events.PVPGunPlusReloadGunEvent;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Gun {
     private final int bulletDelay = 2;

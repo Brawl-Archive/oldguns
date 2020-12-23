@@ -1,21 +1,28 @@
 package com.orange451.pvpgunplus.gun;
 
-import com.brawl.base.util.scheduler.*;
-import com.brawl.shared.util.*;
-import com.brawl.shared.util.math.*;
-import com.orange451.pvpgunplus.*;
-import com.orange451.pvpgunplus.events.*;
-import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent.*;
-import com.orange451.pvpgunplus.gun.util.*;
+import com.brawl.base.util.scheduler.Sync;
+import com.brawl.shared.util.Duration;
+import com.brawl.shared.util.math.Vec3;
+import com.orange451.pvpgunplus.GunTests;
+import com.orange451.pvpgunplus.PVPGunExplosion;
+import com.orange451.pvpgunplus.PVPGunPlus;
+import com.orange451.pvpgunplus.RaycastHelper;
+import com.orange451.pvpgunplus.events.PVPGunPlusGunKillEntityEvent;
+import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent;
+import com.orange451.pvpgunplus.events.PVPGunPlusProjectileDamageEvent.ProjectileType;
+import com.orange451.pvpgunplus.gun.util.CustomExplosion;
 import org.bukkit.*;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import org.bukkit.plugin.*;
-import org.bukkit.potion.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Bullet {
     private static final Duration FIRE_TIME = Duration.seconds(5);

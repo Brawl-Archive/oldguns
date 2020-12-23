@@ -1,13 +1,16 @@
 package com.orange451.pvpgunplus;
 
-import com.brawl.base.packets.*;
-import com.brawl.shared.compatibility.*;
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
+import com.brawl.base.packets.ParticlePacket;
+import com.brawl.shared.compatibility.XEnumParticle;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RaycastHelper {
     public static double PRECISION = 0.1; //Lower is more precise (NEVER SET TO <= 0)

@@ -1,8 +1,10 @@
 package com.orange451.pvpgunplus.gun;
 
-import com.orange451.pvpgunplus.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import com.orange451.pvpgunplus.PVPGunPlus;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class EffectType {
     public int maxDuration;

@@ -1,10 +1,11 @@
 package com.orange451.pvpgunplus;
 
-import com.brawl.base.packets.*;
-import com.brawl.shared.compatibility.*;
-import com.orange451.pvpgunplus.events.*;
-import lombok.*;
-import org.bukkit.*;
+import com.brawl.base.packets.ParticlePacket;
+import com.brawl.shared.compatibility.XEnumParticle;
+import com.orange451.pvpgunplus.events.PVPGunPlusBlockExplodeEvent;
+import lombok.Getter;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 
 public class PVPGunExplosion {
     @Getter

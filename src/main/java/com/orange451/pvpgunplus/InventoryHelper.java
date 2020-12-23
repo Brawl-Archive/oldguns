@@ -1,6 +1,7 @@
 package com.orange451.pvpgunplus;
 
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class InventoryHelper {
     public static int amtItem(Inventory inventory, int itemid, byte dat) {
