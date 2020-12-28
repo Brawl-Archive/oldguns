@@ -20,7 +20,7 @@
 
     <properties>
         <author>Orange</author>
-        <mainClass>com.orange451.pvpgunplus.PVPGunPlus</mainClass>
+        <mainClass>com.brawl.oldguns.OldGuns</mainClass>
     </properties>
 
     <dependencies>
