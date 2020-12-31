@@ -4,12 +4,15 @@ import com.brawl.base.BrawlPlayer;
 import com.brawl.base.BrawlPlugin;
 import com.brawl.base.util.scheduler.Sync;
 import com.brawl.oldguns.commands.EnableTestingCommand;
+import com.brawl.oldguns.commands.OldGunsCommand;
 import com.brawl.oldguns.commands.TestingCommand;
 import com.brawl.oldguns.gun.*;
 import com.brawl.oldguns.listeners.PluginEntityListener;
 import com.brawl.oldguns.listeners.PluginPlayerListener;
 import com.brawl.shared.chat.C;
 import com.brawl.shared.network.message.NetworkChannel;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.v1_8_R3.DamageSource;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import org.bukkit.Bukkit;
@@ -27,17 +30,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
+@Getter
+@Setter
 public class OldGuns extends JavaPlugin {
-    public static OldGuns plugin;
+    private static OldGuns plugin;
     private final PluginPlayerListener playerListener = new PluginPlayerListener(this);
     private final PluginEntityListener entityListener = new PluginEntityListener(this);
     private final ArrayList<Gun> loadedGuns = new ArrayList<>();
     private final ArrayList<EffectType> effects = new ArrayList<>();
-    private final ArrayList<GunPlayer> players = new ArrayList<>();
-    private final String pluginName = "PVPGunPlus";
-    public ArrayList<Bullet> bullets = new ArrayList<>();
-    public int UpdateTimer;
-    public Random random;
+    //private final ArrayList<GunPlayer> players = new ArrayList<>();
+    private ArrayList<Bullet> bullets = new ArrayList<>();
+    private int UpdateTimer;
+    private Random random;
 
     public static void resetPlayerDamage(LivingEntity entity, int ticks) {
         CraftLivingEntity craftLiving = ((CraftLivingEntity) entity);
@@ -60,28 +64,29 @@ public class OldGuns extends JavaPlugin {
             player.playEffect(l, e, num);
     }
 
-    public static OldGuns getPlugin() {
+    public static OldGuns getInstance() {
         return plugin;
     }
 
     public static Sound getSound(String gunSound) {
         String snd = gunSound.toUpperCase().replace(" ", "_");
-        Sound sound = Sound.valueOf(snd);
-        return sound;
+        return Sound.valueOf(snd);
     }
 
     public void onDisable() {
-        System.out.println(this.pluginName + " disabled");
+        System.out.println("OldGuns disabled");
         clearMemory(true);
     }
 
     public void onEnable() {
-        System.out.println(this.pluginName + " enabled");
+        System.out.println("OldGuns enabled");
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(this.playerListener, this);
         pm.registerEvents(this.entityListener, this);
         new TestingCommand().registerCommand();
         new EnableTestingCommand().registerCommand();
+        new OldGunsCommand().registerCommand();
+        GunPlayer.initMeta();
         GunTests.init();
         BrawlPlugin.getInstance().getClientManager().onCreate(client -> {
             client.onInput(NetworkChannel.DATA, GunTests.ActivateMessage.class, activate -> {
@@ -107,17 +112,15 @@ public class OldGuns extends JavaPlugin {
 
     public void clearMemory(boolean init) {
         getServer().getScheduler().cancelTask(this.UpdateTimer);
-        for (int i = bullets.size() - 1; i >= 0; i--) {
-            bullets.get(i).destroy();
+        for (Bullet b : bullets) {
+            b.destroy();
         }
-        for (int i = players.size() - 1; i >= 0; i--) {
-            players.get(i).unload();
-        }
+        GunPlayer.meta.forEach(GunPlayer::unload);
         if (init) {
             loadedGuns.clear();
         }
         bullets.clear();
-        players.clear();
+        //players.clear();
     }
 
     public void startup(boolean init) {
@@ -160,16 +163,15 @@ public class OldGuns extends JavaPlugin {
         File dir = new File(path);
         String[] children = dir.list();
         if (children != null) {
-            for (int i = 0; i < children.length; i++) {
-                String filename = children[i];
+            for (String filename : children) {
                 WeaponReader f = new WeaponReader(this, new File(path + "/" + filename), "gun");
                 if (f.loaded) {
-                    f.ret.node = ("pvpgunplus." + filename.toLowerCase());
+                    f.ret.setNode("pvpgunplus." + filename.toLowerCase());
                     this.loadedGuns.add(f.ret);
-                    f.ret.setIsThrowable(true);
-                    System.out.println("LOADED PROJECTILE: " + f.ret.getName());
+                    f.ret.setThrowable(true);
+                    System.out.println("LOADED PROJECTILE: " + f.ret.getGunName());
                 } else {
-                    System.out.println("FAILED TO PROJECTILE GUN: " + f.ret.getName());
+                    System.out.println("FAILED TO PROJECTILE GUN: " + f.ret.getGunName());
                 }
             }
         }
@@ -180,15 +182,14 @@ public class OldGuns extends JavaPlugin {
         File dir = new File(path);
         String[] children = dir.list();
         if (children != null) {
-            for (int i = 0; i < children.length; i++) {
-                String filename = children[i];
+            for (String filename : children) {
                 WeaponReader f = new WeaponReader(this, new File(path + "/" + filename), "gun");
                 if (f.loaded) {
-                    f.ret.node = ("pvpgunplus." + filename.toLowerCase());
+                    f.ret.setNode("pvpgunplus." + filename.toLowerCase());
                     this.loadedGuns.add(f.ret);
-                    System.out.println("LOADED GUN: " + f.ret.getName());
+                    System.out.println("LOADED GUN: " + f.ret.getGunName());
                 } else {
-                    System.out.println("FAILED TO LOAD GUN: " + f.ret.getName());
+                    System.out.println("FAILED TO LOAD GUN: " + f.ret.getGunName());
                 }
             }
         }
@@ -206,28 +207,20 @@ public class OldGuns extends JavaPlugin {
     public void getOnlinePlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             GunPlayer g = new GunPlayer(this, player);
-            this.players.add(g);
+            if (GunPlayer.get(player) == null)
+                GunPlayer.meta.put(player, g);
         }
     }
 
     public GunPlayer getGunPlayer(Player player) {
-        for (int i = players.size() - 1; i >= 0; i--) {
-            if (players.get(i).getPlayer().equals(player)) {
-                return players.get(i);
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<GunPlayer> getGunPlayers() {
-        return players;
+        return GunPlayer.get(player);
     }
 
     public Gun getGun(int typeId) {
-        for (int i = loadedGuns.size() - 1; i >= 0; i--) {
-            if (loadedGuns.get(i).getGunMaterial() != null) {
-                if (loadedGuns.get(i).getGunMaterial().getId() == typeId) {
-                    return loadedGuns.get(i);
+        for (Gun g : loadedGuns) {
+            if (g.getGunMaterial() != null) {
+                if (g.getGunMaterial().getId() == typeId) {
+                    return g;
                 }
             }
         }
@@ -235,42 +228,28 @@ public class OldGuns extends JavaPlugin {
     }
 
     public Gun getGun(String gunName) {
-        for (int i = loadedGuns.size() - 1; i >= 0; i--) {
-            if (loadedGuns.get(i).getName().toLowerCase().equals(gunName) || loadedGuns.get(i).getFilename().toLowerCase().equals(gunName)) {
-                return loadedGuns.get(i);
+        for (Gun g : loadedGuns) {
+            if (g.getGunName().toLowerCase().equals(gunName) || g.getFileName().toLowerCase().equals(gunName)) {
+                return g;
             }
         }
         return null;
     }
 
-    public void onJoin(Player player) {
-        if (getGunPlayer(player) == null) {
-            GunPlayer gp = new GunPlayer(this, player);
-            players.add(gp);
-        }
-    }
-
-    public void onQuit(Player player) {
-        for (int i = players.size() - 1; i >= 0; i--) {
-            if (players.get(i).getPlayer().getName().equals(player.getName())) {
-                players.remove(i);
-            }
-        }
-    }
-
     public ArrayList<Gun> getLoadedGuns() {
-        ArrayList<Gun> ret = new ArrayList<Gun>();
-        for (int i = loadedGuns.size() - 1; i >= 0; i--) {
-            ret.add(loadedGuns.get(i).copy());
+        ArrayList<Gun> ret = new ArrayList<>();
+        for (Gun g : loadedGuns) {
+            ret.add(g.copy());
         }
         return ret;
     }
 
     public boolean editLoadedGun(int typeId, Gun g) {
         boolean success = false;
-        for (int i = loadedGuns.size() - 1; i >= 0; i--) {
-            if (loadedGuns.get(i).getGunMaterial().getId() == typeId) {
-                loadedGuns.set(i, g);
+        for (Gun gun : loadedGuns) {
+            if (g.getGunMaterial().getId() == typeId) {
+                loadedGuns.remove(gun);
+                loadedGuns.add(g);
                 success = true;
             }
         }
@@ -286,9 +265,9 @@ public class OldGuns extends JavaPlugin {
     }
 
     public Bullet getBullet(Entity proj) {
-        for (int i = bullets.size() - 1; i >= 0; i--) {
-            if (bullets.get(i).getProjectile().getEntityId() == proj.getEntityId()) {
-                return bullets.get(i);
+        for (Bullet b : bullets) {
+            if (b.getProjectile().getEntityId() == proj.getEntityId()) {
+                return b;
             }
         }
         return null;
@@ -307,20 +286,13 @@ public class OldGuns extends JavaPlugin {
         }
 
         public void run() {
-            for (int i = players.size() - 1; i >= 0; i--) {
-                GunPlayer gp = players.get(i);
-                if (gp != null) {
-                    gp.tick();
-                }
-            }
-            for (int i = bullets.size() - 1; i >= 0; i--) {
-                Bullet t = bullets.get(i);
+            GunPlayer.meta.forEach(GunPlayer::tick);
+            for (Bullet t : bullets) {
                 if (t != null) {
                     t.tick();
                 }
             }
-            for (int i = OldGuns.this.effects.size() - 1; i >= 0; i--) {
-                EffectType eff = OldGuns.this.effects.get(i);
+            for (EffectType eff : effects) {
                 if (eff != null)
                     eff.tick();
             }

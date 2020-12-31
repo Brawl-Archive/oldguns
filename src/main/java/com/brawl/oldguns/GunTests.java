@@ -24,12 +24,6 @@ public enum GunTests {
     Function<CommandSender, Boolean> onEnable;
     Function<CommandSender, Boolean> onDisable;
 
-    GunTests() {
-        desc = "";
-        onEnable = null;
-        onDisable = null;
-    }
-
     GunTests(String desc) {
         this.desc = desc;
         onEnable = null;

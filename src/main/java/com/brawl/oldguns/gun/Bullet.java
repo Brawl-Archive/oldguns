@@ -1,19 +1,22 @@
 package com.brawl.oldguns.gun;
 
 import com.brawl.base.util.scheduler.Sync;
-import com.brawl.oldguns.events.ProjectileDamageEvent;
-import com.brawl.oldguns.gun.util.CustomExplosion;
-import com.brawl.shared.util.Duration;
-import com.brawl.shared.util.math.Vec3;
 import com.brawl.oldguns.GunTests;
 import com.brawl.oldguns.OldGuns;
+import com.brawl.oldguns.events.ProjectileDamageEvent;
+import com.brawl.oldguns.util.CustomExplosion;
 import com.brawl.oldguns.util.RaycastHelper;
-import com.brawl.oldguns.events.GunKillEntityEvent;
-import org.bukkit.*;
+import com.brawl.shared.util.Duration;
+import com.brawl.shared.util.math.Vec3;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -22,11 +25,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+@Getter
+@Setter
 public class Bullet {
     private static final Duration FIRE_TIME = Duration.seconds(5);
     private static final int MAX_FLASH = 70;
-    public String bulletType = "";
-    public boolean destroyWhenHit;
+    private String bulletType = "";
+    private boolean destroyWhenHit;
     private int ticks;
     private int releaseTime;
     private boolean dead = false;
@@ -46,20 +51,19 @@ public class Bullet {
         shooter = owner;
         velocity = vec;
 
-        destroyWhenHit = gun.getDestroyBulletWhenHit();
+        destroyWhenHit = gun.isDestroyBulletWhenHit();
 
         if (alreadyFired != null) {
             projectile = alreadyFired;
         }
 
         if (gun.isThrowable()) {
-            ItemStack thrown = new ItemStack(gun.getGunType(), 1, gun.getGunTypeByte());
+            ItemStack thrown = new ItemStack(gun.getGunType(), 1, gun.getGunByte());
             projectile = owner.getPlayer().getWorld().dropItem(owner.getPlayer().getEyeLocation(), thrown);
             ((Item) projectile).setPickupDelay(9999999);
-            startLocation = projectile.getLocation();
         } else {
             Class<? extends Projectile> mclass = Snowball.class;
-            String check = gun.projType.replace(" ", "").replace("_", "");
+            String check = gun.getProjType().replace(" ", "").replace("_", "");
             bulletType = check;
             if (check.equalsIgnoreCase("egg"))
                 mclass = Egg.class;
@@ -91,35 +95,11 @@ public class Bullet {
                 Location loc = owner.getPlayer().getEyeLocation();
                 Block b_hit = RaycastHelper.rayCastToBlockDistance(loc, vec, true).getBlock();
                 final Player p_hit = RaycastHelper.rayCastToPlayer(loc, vec);
-                final GunPlayer mshooter = shooter;
-                final Gun mgun = shotFrom;
                 Location to = b_hit.getLocation();
 
                 if ((p_hit != null) && (loc.distance(p_hit.getLocation()) < loc.distance(b_hit.getLocation()))) {
                     to = p_hit.getLocation();
-
-                    try {
-                        Plugin plugin = Bukkit.getPluginManager().getPlugin("KitPvP");
-                        if (plugin != null && plugin instanceof DamageListener) {
-                            DamageListener mcwarfare = (DamageListener) plugin;
-                            mcwarfare.damagePlayer(p_hit, shotFrom.getGunDamage(), DamageType.PLAYER,
-                                    shooter.getPlayer());
-                            if ((p_hit.isDead() || p_hit.getHealth() <= 0)) {
-                                OldGuns.getPlugin().getServer().getScheduler()
-                                        .scheduleSyncDelayedTask(OldGuns.getPlugin(), new Runnable() {
-                                            public void run() {
-                                                GunKillEntityEvent pvpgunkill = new GunKillEntityEvent(
-                                                        mshooter, mgun, p_hit);
-                                                pvpgunkill.callEvent();
-                                            }
-                                        }, 1l);
-                            }
-                        } else {
-                            p_hit.damage(shotFrom.getGunDamage(), shooter.getPlayer());
-                        }
-                    } catch (Exception e) {
-                        //
-                    }
+                    p_hit.damage(shotFrom.getGunDamage(), shooter.getPlayer());
                 }
                 projectile = null;
                 lastLocation = to;
@@ -131,8 +111,8 @@ public class Bullet {
             if (projectile == null)
                 projectile = owner.getPlayer().launchProjectile(mclass);
             ((Projectile) projectile).setShooter(owner.getPlayer());
-            startLocation = projectile.getLocation();
         }
+        startLocation = projectile.getLocation();
 
         if (shotFrom.getReleaseTime() == -1) {
             releaseTime = (20 * 4) + (!gun.isThrowable() ? 1 : 0) * (400);
@@ -175,9 +155,9 @@ public class Bullet {
 
                 if (ticks > releaseTime) {
                     // 12-16 - REMOVING THIS. ADDING BETTER MOLLY EFFECT THIS IS ONLY POLACE WHERE THIS CODE IS USED LUL + IT BLOWS
-                    EffectType eff = shotFrom.releaseEffect;
+                    EffectType eff = shotFrom.getReleaseEffect();
                     if (eff != null) {
-                        if (eff.type == Effect.MOBSPAWNER_FLAMES && GunTests.WAR_MOLLY.isActive())
+                        if (eff.getType() == Effect.MOBSPAWNER_FLAMES && GunTests.WAR_MOLLY.isActive())
                             doFireExplode();
                         else
                             eff.start(lastLocation);
@@ -186,7 +166,7 @@ public class Bullet {
                     return;
                 }
 
-                if (shotFrom.hasSmokeTrail()) {
+                if (shotFrom.isHasSmokeTrail()) {
                     lastLocation.getWorld().playEffect(lastLocation, Effect.SMOKE, 0);
                 }
 
@@ -200,7 +180,7 @@ public class Bullet {
                         double dis = lastLocation.distance(startLocation);
                         if (dis > shotFrom.getMaxDistance()) {
                             active = false;
-                            if (!shotFrom.isThrowable() && !shotFrom.canGoPastMaxDistance())
+                            if (!shotFrom.isThrowable() && !shotFrom.isCanGoPastMaxDistance())
                                 velocity.multiply(0.25);
                         }
                     }
@@ -220,21 +200,9 @@ public class Bullet {
             dead = true;
     }
 
-    public Gun getGun() {
-        return shotFrom;
-    }
-
-    public GunPlayer getShooter() {
-        return shooter;
-    }
-
-    public Vector getVelocity() {
-        return velocity;
-    }
-
     public void remove() {
         dead = true;
-        OldGuns.getPlugin().removeBullet(this);
+        OldGuns.getInstance().removeBullet(this);
         if (projectile != null)
             projectile.remove();
         onHit();
@@ -301,7 +269,7 @@ public class Bullet {
                     for (int ii = -rad2 / 2; ii <= rad2 / 2; ii++) {
                         for (int iii = -rad; iii <= rad; iii++) {
                             Location nloc = lastLocation.clone().add(i, ii, iii);
-                            if (nloc.distance(lastLocation) <= rad && OldGuns.getPlugin().random.nextInt(5) == 1) {
+                            if (nloc.distance(lastLocation) <= rad && OldGuns.getInstance().getRandom().nextInt(5) == 1) {
                                 lastLocation.getWorld().playEffect(nloc, Effect.MOBSPAWNER_FLAMES, 2);
                                 // lastLocation.getWorld().playEffect(nloc, Effect.getById(2001),
                                 // Material.FIRE);
@@ -316,13 +284,12 @@ public class Bullet {
             lastLocation.getWorld().createExplosion(lastLocation, 0);
 
             int rad = (int) shotFrom.getExplodeRadius();
-            int rad2 = rad;
             if (rad > 0) {
                 for (int i = -rad; i <= rad; i++) {
-                    for (int ii = -rad2 / 2; ii <= rad2 / 2; ii++) {
+                    for (int ii = -rad / 2; ii <= rad / 2; ii++) {
                         for (int iii = -rad; iii <= rad; iii++) {
                             Location nloc = lastLocation.clone().add(i, ii, iii);
-                            if (nloc.distance(lastLocation) <= rad && OldGuns.getPlugin().random.nextInt(10) == 1)
+                            if (nloc.distance(lastLocation) <= rad && OldGuns.getInstance().getRandom().nextInt(10) == 1)
                                 new Explosion(nloc).explode();
                             else {
                                 Explosion.callExplosionEvent(nloc);
@@ -336,32 +303,25 @@ public class Bullet {
             Location temp = lastLocation.clone().add(0, 0.55, 0);
             double c = (shotFrom.getExplodeRadius());
             ArrayList<Entity> entities = RaycastHelper.getNearbyEntities(temp, c);
-            for (int i = 0; i < entities.size(); i++) {
-                if (entities.get(i) instanceof LivingEntity) {
-                    if (RaycastHelper.hasLineOfSight(temp, ((LivingEntity) entities.get(i)).getEyeLocation())) {
+            for (Entity entity : entities) {
+                if (entity instanceof LivingEntity) {
+                    if (RaycastHelper.hasLineOfSight(temp, ((LivingEntity) entity).getEyeLocation())) {
                         // if (((LivingEntity)entities.get(i)).hasLineOfSight(projectile)) {
                         int dmg = shotFrom.getExplosionDamage();
                         if (dmg == -1)
                             dmg = shotFrom.getGunDamage();
 
-                        if (entities.get(i) instanceof Player) {
-                            Plugin plugin = Bukkit.getPluginManager().getPlugin("KitPvP");
-                            if (plugin != null && plugin instanceof DamageListener) {
-                                DamageListener mcwarfare = (DamageListener) plugin;
-                                mcwarfare.damagePlayer(((Player) entities.get(i)), dmg, DamageType.EXPLOSION,
-                                        shooter.getPlayer());
-                            } else {
-                                LivingEntity hurt = (LivingEntity) entities.get(i);
-                                ProjectileDamageEvent event = new ProjectileDamageEvent(shotFrom, shooter, dmg, ProjectileDamageEvent.ProjectileType.GRENADE, hurt);
-                                event.callEvent();
+                        if (entity instanceof Player) {
+                            LivingEntity hurt = (LivingEntity) entity;
+                            ProjectileDamageEvent event = new ProjectileDamageEvent(shotFrom, shooter, dmg, ProjectileDamageEvent.ProjectileType.GRENADE, hurt);
+                            event.callEvent();
 
-                                if (!event.isCancelled()) {
-                                    hurt.damage(dmg, shooter.getPlayer());
-                                    hurt.setLastDamage(0D);
-                                }
+                            if (!event.isCancelled()) {
+                                hurt.damage(dmg, shooter.getPlayer());
+                                hurt.setLastDamage(0D);
                             }
                         } else {
-                            LivingEntity hurt = (LivingEntity) entities.get(i);
+                            LivingEntity hurt = (LivingEntity) entity;
                             ProjectileDamageEvent event = new ProjectileDamageEvent(shotFrom, shooter, dmg, ProjectileDamageEvent.ProjectileType.GRENADE, hurt);
                             event.callEvent();
 
@@ -381,9 +341,9 @@ public class Bullet {
             lastLocation.getWorld().playSound(lastLocation, Sound.GLASS, 20, 20);
             int c = (int) (shotFrom.getFireRadius());
             ArrayList<Entity> entities = (ArrayList<Entity>) projectile.getNearbyEntities(c, c, c);
-            for (int i = 0; i < entities.size(); i++) {
-                if (entities.get(i) instanceof LivingEntity) {
-                    LivingEntity hurt = (LivingEntity) entities.get(i);
+            for (Entity entity : entities) {
+                if (entity instanceof LivingEntity) {
+                    LivingEntity hurt = (LivingEntity) entity;
                     ProjectileDamageEvent event = new ProjectileDamageEvent(shotFrom, shooter, 1D, ProjectileDamageEvent.ProjectileType.MOLOTOV, hurt);
                     event.callEvent();
 
@@ -405,9 +365,9 @@ public class Bullet {
             Location temp = lastLocation.clone().add(0, 0.55, 0);
             int c = (int) (shotFrom.getFlashRadius());
             ArrayList<Entity> entities = RaycastHelper.getNearbyEntities(temp, c);
-            for (int i = 0; i < entities.size(); i++) {
-                if (entities.get(i) instanceof LivingEntity) {
-                    LivingEntity lent = (LivingEntity) entities.get(i);
+            for (Entity entity : entities) {
+                if (entity instanceof LivingEntity) {
+                    LivingEntity lent = (LivingEntity) entity;
                     if (RaycastHelper.hasLineOfSight(temp, lent.getEyeLocation())) {
                         ProjectileDamageEvent event = new ProjectileDamageEvent(shotFrom, shooter, 0D, ProjectileDamageEvent.ProjectileType.FLASHBANG, lent);
                         event.callEvent();
@@ -421,7 +381,7 @@ public class Bullet {
                                 int scaledTicks = (int) (MAX_FLASH * scaledAngle);
                                 lent.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, scaledTicks, 1));
                             } else {
-                                ((LivingEntity) entities.get(i))
+                                ((LivingEntity) entity)
                                         .addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 3, 1));
                             }
                         }
@@ -436,17 +396,5 @@ public class Bullet {
         velocity = null;
         shotFrom = null;
         shooter = null;
-    }
-
-    public Entity getProjectile() {
-        return projectile;
-    }
-
-    public void setNextTickDestroy() {
-        destroyNextTick = true;
-    }
-
-    public void setStuckTo(LivingEntity hurt) {
-        stuckTo = hurt;
     }
 }

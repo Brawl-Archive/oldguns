@@ -8,11 +8,11 @@ public class InventoryHelper {
         int ret = 0;
         if (inventory != null) {
             ItemStack[] items = inventory.getContents();
-            for (int slot = 0; slot < items.length; slot++) {
-                if (items[slot] != null) {
-                    int id = items[slot].getTypeId();
-                    int itmDat = items[slot].getData().getData();
-                    int amt = items[slot].getAmount();
+            for (ItemStack item : items) {
+                if (item != null) {
+                    int id = item.getTypeId();
+                    int itmDat = item.getData().getData();
+                    int amt = item.getAmount();
                     if (id == itemid && (dat == itmDat || dat == -1)) {
                         ret += amt;
                     }

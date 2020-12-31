@@ -6,10 +6,3 @@ website: ${url}
 main: ${mainClass}
 depend: [ Base ]
 commands:
-  pvpgunplus:
-    description:
-    usage:
-permissions:
-  pvpgunplus:
-    description: Used for guns
-    default: op

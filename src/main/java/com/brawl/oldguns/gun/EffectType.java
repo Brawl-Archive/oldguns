@@ -1,16 +1,20 @@
 package com.brawl.oldguns.gun;
 
 import com.brawl.oldguns.OldGuns;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+@Getter
+@Setter
 public class EffectType {
-    public int maxDuration;
-    public Effect type;
-    public double radius;
-    public byte specialDat = -1;
+    private final int maxDuration;
+    private final Effect type;
+    private final double radius;
+    private byte specialDat = -1;
     private int duration;
     private Location location;
 
@@ -24,7 +28,7 @@ public class EffectType {
     public void start(Location location) {
         this.location = location;
         this.duration = this.maxDuration;
-        OldGuns.getPlugin().addEffect(this);
+        OldGuns.getInstance().addEffect(this);
     }
 
     public EffectType clone() {
@@ -35,7 +39,7 @@ public class EffectType {
         this.duration -= 1;
 
         if (this.duration < 0) {
-            OldGuns.getPlugin().removeEffect(this);
+            OldGuns.getInstance().removeEffect(this);
             return;
         }
         double yRad = this.radius;
@@ -52,12 +56,12 @@ public class EffectType {
         for (double i = -this.radius; i <= this.radius; i += 1.0D) {
             for (double ii = -this.radius; ii <= this.radius; ii += 1.0D) {
                 for (double iii = 0.0D; iii <= yRad * 2.0D; iii += 1.0D) {
-                    int rand = OldGuns.getPlugin().random.nextInt(8);
+                    int rand = OldGuns.getInstance().getRandom().nextInt(8);
                     if (rand == 2) {
                         Location newloc = this.location.clone().add(i, iii - 1.0D, ii);
                         Location testLoc = this.location.clone().add(0.0D, yRad - 1.0D, 0.0D);
                         if (newloc.distance(testLoc) <= this.radius) {
-                            byte dat = (byte) OldGuns.getPlugin().random.nextInt(8);
+                            byte dat = (byte) OldGuns.getInstance().getRandom().nextInt(8);
                             if (this.specialDat > -1)
                                 dat = this.specialDat;
                             newloc.getWorld().playEffect(newloc, this.type, dat);

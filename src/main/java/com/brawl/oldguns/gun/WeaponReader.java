@@ -19,7 +19,7 @@ public class WeaponReader {
         this.file = file;
         this.weaponType = string;
         this.ret = new Gun(file.getName());
-        ret.setFilename(file.getName().toLowerCase());
+        ret.setFileName(file.getName().toLowerCase());
         this.load();
     }
 
@@ -34,7 +34,7 @@ public class WeaponReader {
                 if (var.equals("guntype"))
                     ret.setGunType(val);
                 if (var.equals("ammoamtneeded"))
-                    ret.setAmmoAmountNeeded(Integer.parseInt(val));
+                    ret.setAmmoAmtNeeded(Integer.parseInt(val));
                 if (var.equals("reloadtime"))
                     ret.setReloadTime(Integer.parseInt(val));
                 if (var.equals("gundamage"))
@@ -54,9 +54,9 @@ public class WeaponReader {
                 if (var.equals("accuracy"))
                     ret.setAccuracy(Double.parseDouble(val));
                 if (var.equals("accuracy_aimed"))
-                    ret.setAccuracyAimed(Double.parseDouble(val));
+                    ret.setAccuracy_aimed(Double.parseDouble(val));
                 if (var.equals("accuracy_crouched"))
-                    ret.setAccuracyCrouched(Double.parseDouble(val));
+                    ret.setAccuracy_crouched(Double.parseDouble(val));
                 if (var.equals("exploderadius"))
                     ret.setExplodeRadius(Double.parseDouble(val));
                 if (var.equals("gunvolume"))
@@ -95,40 +95,40 @@ public class WeaponReader {
                 if (var.equals("permissionmessage"))
                     ret.setPermissionMessage(val);
                 if (var.equals("bullettype"))
-                    ret.projType = val;
+                    ret.setProjType(val);
                 if (var.equals("needspermission"))
-                    ret.needsPermission = Boolean.parseBoolean(val);
+                    ret.setNeedsPermission(Boolean.parseBoolean(val));
                 if (var.equals("hassmoketrail"))
-                    ret.setSmokeTrail(Boolean.parseBoolean(val));
+                    ret.setHasSmokeTrail(Boolean.parseBoolean(val));
                 if (var.equals("gunsound"))
                     ret.addGunSounds(val);
                 if (var.equals("maxclipsize"))
-                    ret.maxClipSize = Integer.parseInt(val);
+                    ret.setMaxClipSize(Integer.parseInt(val));
                 if (var.equals("hasclip"))
-                    ret.hasClip = Boolean.parseBoolean(val);
+                    ret.setHasClip(Boolean.parseBoolean(val));
                 if (var.equals("reloadgunondrop"))
-                    ret.reloadGunOnDrop = Boolean.parseBoolean(val);
+                    ret.setReloadGunOnDrop(Boolean.parseBoolean(val));
                 if (var.equals("localgunsound"))
                     ret.setLocalGunSound(Boolean.parseBoolean(val));
                 if (var.equalsIgnoreCase("canGoPastMaxDistance"))
                     ret.setCanGoPastMaxDistance(Boolean.parseBoolean(val));
                 if (var.equalsIgnoreCase("ignoreitemdata"))
-                    ret.ignoreItemData = Boolean.parseBoolean(val);
+                    ret.setIgnoreItemData(Boolean.parseBoolean(val));
                 if (var.equals("bulletdelaytime"))
-                    ret.bulletDelayTime = Integer.parseInt(val);
+                    ret.setBulletDelayTime(Integer.parseInt(val));
                 if (var.equals("explosiondamage"))
                     ret.setExplosionDamage(Integer.parseInt(val));
                 if (var.equals("timeuntilrelease"))
                     ret.setReleaseTime(Integer.parseInt(val));
                 if (var.equals("reloadtype"))
-                    ret.reloadType = val;
+                    ret.setReloadType(val);
                 if (var.equals("play_effect_on_release")) {
                     String[] effDat = val.split(",");
                     if (effDat.length == 3) {
                         double radius = Double.parseDouble(effDat[0]);
                         int duration = Integer.parseInt(effDat[1]);
                         Effect eff = Effect.valueOf(effDat[2].toUpperCase());
-                        this.ret.releaseEffect = new EffectType(duration, radius, eff);
+                        this.ret.setReleaseEffect(new EffectType(duration, radius, eff));
                     } else if (effDat.length == 4) {
                         double radius = Double.parseDouble(effDat[0]);
                         int duration = Integer.parseInt(effDat[1]);
@@ -136,7 +136,7 @@ public class WeaponReader {
                         byte specialDat = Byte.parseByte(effDat[3]);
                         EffectType effect = new EffectType(duration, radius, eff);
                         effect.setSpecialDat(specialDat);
-                        this.ret.releaseEffect = effect;
+                        this.ret.setReleaseEffect(effect);
                     }
                 }
             }

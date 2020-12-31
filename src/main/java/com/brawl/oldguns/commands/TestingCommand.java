@@ -1,9 +1,9 @@
 package com.brawl.oldguns.commands;
 
 import com.brawl.base.command.RankOnlyCommand;
+import com.brawl.oldguns.GunTests;
 import com.brawl.shared.Rank;
 import com.brawl.shared.chat.C;
-import com.brawl.oldguns.GunTests;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;

@@ -1,6 +1,5 @@
 package com.brawl.oldguns.listeners;
 
-import com.brawl.shared.util.Duration;
 import com.brawl.oldguns.OldGuns;
 import com.brawl.oldguns.events.BulletCollideEvent;
 import com.brawl.oldguns.events.GunDamageEntityEvent;
@@ -8,6 +7,7 @@ import com.brawl.oldguns.events.GunKillEntityEvent;
 import com.brawl.oldguns.gun.Bullet;
 import com.brawl.oldguns.gun.Gun;
 import com.brawl.oldguns.gun.GunPlayer;
+import com.brawl.shared.util.Duration;
 import lombok.Data;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import org.bukkit.Effect;
@@ -62,16 +62,16 @@ public class PluginEntityListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onProjectileHit(ProjectileHitEvent event) {
         Projectile check = event.getEntity();
-        Bullet bullet = OldGuns.getPlugin().getBullet(check);
+        Bullet bullet = OldGuns.getInstance().getBullet(check);
         if (bullet != null) {
             bullet.onHit();
-            if (bullet.destroyWhenHit)
-                bullet.setNextTickDestroy();
+            if (bullet.isDestroyWhenHit())
+                bullet.setDestroyNextTick(true);
             Projectile p = event.getEntity();
             Block b = p.getLocation().getBlock();
             int id = b.getTypeId();
             /*if (b == null || id == 0) {
-            	for (GunPlayer player : PVPGunPlus.getPlugin().getGunPlayers()) {
+            	for (GunPlayer player : PVPGunPlus.getInstance().getGunPlayers()) {
             		if (player.lastHit <= 0 || player.lastHitLocation == null || player.lastHitSource == null)
             			break;
             		final long HIT_DELAY = 800L;
@@ -94,10 +94,10 @@ public class PluginEntityListener implements Listener {
                 p.getLocation().getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, id);
             }
 
-            BulletCollideEvent evv = new BulletCollideEvent(bullet.getShooter(), bullet.getGun(), b);
+            BulletCollideEvent evv = new BulletCollideEvent(bullet.getShooter(), bullet.getShotFrom(), b);
             evv.callEvent();
 
-            if (bullet.destroyWhenHit) {
+            if (bullet.isDestroyWhenHit()) {
                 bullet.remove();
                 event.getEntity().remove();
             }
@@ -114,9 +114,9 @@ public class PluginEntityListener implements Listener {
                 Entity damager = ede.getDamager();
                 if (damager instanceof Projectile) {
                     Projectile proj = (Projectile) (damager);
-                    Bullet bullet = OldGuns.getPlugin().getBullet(proj);
+                    Bullet bullet = OldGuns.getInstance().getBullet(proj);
                     if (bullet != null) {
-                        Gun used = bullet.getGun();
+                        Gun used = bullet.getShotFrom();
                         GunPlayer shooter = bullet.getShooter();
 
                         GunKillEntityEvent pvpgunkill = new GunKillEntityEvent(shooter, used, dead);
@@ -174,13 +174,13 @@ public class PluginEntityListener implements Listener {
             LivingEntity hurt = (LivingEntity) event.getEntity();
             if (damager instanceof Projectile) {
                 Projectile proj = (Projectile) (damager);
-                Bullet bullet = OldGuns.getPlugin().getBullet(proj);
+                Bullet bullet = OldGuns.getInstance().getBullet(proj);
                 if (bullet != null) {
                     boolean headshot = false;
-                    if (isNear(proj.getLocation(), hurt.getEyeLocation(), 0.26D) && bullet.getGun().canHeadShot()) {
+                    if (isNear(proj.getLocation(), hurt.getEyeLocation(), 0.26D) && bullet.getShotFrom().isCanHeadshot()) {
                         headshot = true;
                     }
-                    GunDamageEntityEvent pvpgundmg = new GunDamageEntityEvent(event, bullet.getShooter(), bullet.getGun(), event.getEntity(), headshot);
+                    GunDamageEntityEvent pvpgundmg = new GunDamageEntityEvent(event, bullet.getShooter(), bullet.getShotFrom(), event.getEntity(), headshot);
                     pvpgundmg.callEvent();
                     if (!pvpgundmg.isCancelled() /*&& !(hurt instanceof Player && ((Player) hurt).isInvulnerable())*/) {
                         OldGuns.resetPlayerDamage(hurt, 0);
@@ -206,12 +206,12 @@ public class PluginEntityListener implements Listener {
                             hurt.setHealth(newHealth);
                         }
 
-                        bullet.getGun().doKnockback(hurt, bullet.getVelocity());
+                        bullet.getShotFrom().doKnockback(hurt, bullet.getVelocity());
 
-                        if (bullet.destroyWhenHit)
+                        if (bullet.isDestroyWhenHit())
                             bullet.remove();
 
-                        if (bullet.bulletType.equals("crossbow")) {
+                        if (bullet.getBulletType().equals("crossbow")) {
                             bullet.setStuckTo(hurt);
                             //System.out.println("STUCK GRENADE");
                         }

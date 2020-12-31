@@ -19,7 +19,6 @@ public class RaycastHelper {
     public static Block rayCastToBlock(Location location, Vector normal_direction) {
         Location use = location.clone();
         Block b = location.getBlock();
-        Block last = b;
         Vector nvec = normal_direction.multiply(RaycastHelper.PRECISION);
 
         for (double i = 1; i <= RaycastHelper.MAX_RAY_DISTANCE; i += RaycastHelper.PRECISION) {
@@ -28,7 +27,6 @@ public class RaycastHelper {
             if (isSolid(temp)) {
                 return temp;
             }
-            last = temp;
         }
         return b;
     }
@@ -85,7 +83,7 @@ public class RaycastHelper {
     }
 
     public static ArrayList<Entity> getNearbyEntities(Location lastLocation, double dis) {
-        ArrayList<Entity> nearby = new ArrayList<Entity>();
+        ArrayList<Entity> nearby = new ArrayList<>();
         List<Entity> world = lastLocation.getWorld().getEntities();
         synchronized (world) {
             for (int i = world.size() - 1; i >= 0; i--) {

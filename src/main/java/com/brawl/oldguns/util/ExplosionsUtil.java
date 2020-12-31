@@ -1,4 +1,4 @@
-package com.brawl.oldguns.gun.util;
+package com.brawl.oldguns.util;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

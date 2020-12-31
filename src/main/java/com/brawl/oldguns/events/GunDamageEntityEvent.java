@@ -3,6 +3,7 @@ package com.brawl.oldguns.events;
 import com.brawl.oldguns.gun.Gun;
 import com.brawl.oldguns.gun.GunPlayer;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.v1_8_R3.DamageSource;
 import net.minecraft.server.v1_8_R3.EnchantmentManager;
 import net.minecraft.server.v1_8_R3.EntityLiving;
@@ -13,6 +14,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@Getter
+@Setter
 public class GunDamageEntityEvent extends GunEvent {
     private final Gun gun;
     private final GunPlayer shooter;
@@ -21,12 +24,11 @@ public class GunDamageEntityEvent extends GunEvent {
     private int armorPenetration;
     private double damage;
     private EntityDamageByEntityEvent event;
-
-    @Getter
     private int damagedArmorPoints = 0;
 
     public GunDamageEntityEvent(EntityDamageByEntityEvent event, GunPlayer shooter, Gun gun, Entity shot,
                                 boolean headshot) {
+        this.event = event;
         this.gun = gun;
         this.shooter = shooter;
         this.shot = shot;
@@ -41,48 +43,8 @@ public class GunDamageEntityEvent extends GunEvent {
         }
     }
 
-    public EntityDamageByEntityEvent getEntityDamageEntityEvent() {
-        return event;
-    }
-
-    public boolean isHeadshot() {
-        return isHeadshot;
-    }
-
-    public void setHeadshot(boolean b) {
-        this.isHeadshot = b;
-    }
-
-    public GunPlayer getShooter() {
-        return shooter;
-    }
-
-    public Entity getEntityDamaged() {
-        return shot;
-    }
-
     public Player getKillerAsPlayer() {
         return shooter.getPlayer();
-    }
-
-    public Gun getGun() {
-        return gun;
-    }
-
-    public double getDamage() {
-        return damage;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
-
-    public int getArmorPenetration() {
-        return armorPenetration;
-    }
-
-    public void setArmorPenetration(int armorPenetration) {
-        this.armorPenetration = armorPenetration;
     }
 
     /**

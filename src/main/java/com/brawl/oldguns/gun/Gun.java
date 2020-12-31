@@ -1,9 +1,9 @@
 package com.brawl.oldguns.gun;
 
+import com.brawl.oldguns.OldGuns;
 import com.brawl.oldguns.events.FireGunEvent;
 import com.brawl.oldguns.events.ReloadGunEvent;
 import com.brawl.oldguns.util.InventoryHelper;
-import com.brawl.oldguns.OldGuns;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
@@ -16,33 +16,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+@Getter
+@Setter
 public class Gun {
-    private final int bulletDelay = 2;
-    public String projType = "";
-    public ArrayList<String> gunSound = new ArrayList<>();
-    public String outOfAmmoMessage = "";
-    public String permissionMessage = "";
-    public boolean needsPermission;
-    public boolean canClickRight;
-    public boolean canClickLeft;
-    public boolean hasClip = true;
-    public boolean ignoreItemData = false;
-    public boolean reloadGunOnDrop = true;
-    public int maxClipSize = 30;
-    public int bulletDelayTime = 10;
-    public int roundsFired;
-    public int gunReloadTimer;
-    public int timer;
-    public int lastFired;
-    public int ticks;
-    public int heldDownTicks;
-    public boolean firing = false;
-    public boolean reloading;
-    public boolean changed = false;
-    public EffectType releaseEffect;
-    public GunPlayer owner;
-    public String node;
-    public String reloadType = "NORMAL";
+    private String projType = "";
+    private ArrayList<String> gunSound = new ArrayList<>();
+    private String outOfAmmoMessage;
+    private String permissionMessage = "";
+    private boolean needsPermission;
+    private boolean canClickRight;
+    private boolean canClickLeft;
+    private boolean hasClip = true;
+    private boolean ignoreItemData = false;
+    private boolean reloadGunOnDrop = true;
+    private int maxClipSize = 30;
+    private int bulletDelayTime = 10;
+    private int roundsFired;
+    private int gunReloadTimer;
+    private int timer;
+    private int lastFired;
+    private int ticks;
+    private int heldDownTicks;
+    private boolean firing = false;
+    private boolean reloading;
+    private boolean changed = false;
+    private EffectType releaseEffect;
+    private GunPlayer owner;
+    private String node;
+    private String reloadType = "NORMAL";
     private boolean canHeadshot;//
     private boolean isThrowable;//
     private boolean hasSmokeTrail;
@@ -55,8 +56,6 @@ public class Gun {
     private byte ammoByte;
     private int gunType;
     private int ammoType;
-    @Getter
-    @Setter
     private boolean infiniteAmmo = false;
     private int ammoAmtNeeded;
     private int gunDamage;
@@ -153,12 +152,11 @@ public class Gun {
                     Vector vec = new Vector(xd, yd, zd);
                     vec.multiply(getBulletSpeed());
                     Bullet bullet = new Bullet(owner, vec, this, null);
-                    OldGuns.getPlugin().addBullet(bullet);
+                    OldGuns.getInstance().addBullet(bullet);
                 }
 
                 if (roundsFired >= maxClipSize && hasClip) {
                     reloadGun();
-                    return;
                 }
             }
         }
@@ -184,7 +182,8 @@ public class Gun {
 
         if (((heldDownTicks >= 2 && timer <= 0) || firing) && !reloading) {
             if (this.roundsPerBurst > 1) {
-                if (ticks % this.bulletDelay == 0) {
+                int bulletDelay = 2;
+                if (ticks % bulletDelay == 0) {
                     bulletsShot++;
                     if (bulletsShot <= this.roundsPerBurst) {
                         shoot();
@@ -415,7 +414,7 @@ public class Gun {
         gunReloadTimer = 0;
 
         if (infiniteAmmo && owner != null && owner.getPlayer() != null && owner.getPlayer().isOnline()) {
-            int ammo = InventoryHelper.amtItem(owner.getPlayer().getInventory(), getAmmoType(), getAmmoTypeByte());
+            int ammo = InventoryHelper.amtItem(owner.getPlayer().getInventory(), getAmmoType(), getAmmoByte());
             int needed = Math.max(0, (maxClipSize - ammo));
 
             if (needed != 0) {
@@ -430,7 +429,7 @@ public class Gun {
         firing = false;
 
         if (infiniteAmmo && owner != null && owner.getPlayer() != null && owner.getPlayer().isOnline()) {
-            int ammo = InventoryHelper.amtItem(owner.getPlayer().getInventory(), getAmmoType(), getAmmoTypeByte());
+            int ammo = InventoryHelper.amtItem(owner.getPlayer().getInventory(), getAmmoType(), getAmmoByte());
             int needed = Math.max(0, (maxClipSize - ammo));
 
             if (needed != 0) {
@@ -439,22 +438,13 @@ public class Gun {
         }
     }
 
-    public String getName() {
-        return gunName;
-    }
-
     public void setName(String val) {
         this.gunName = ChatColor.translateAlternateColorCodes('&', val);
     }
 
     public Material getAmmoMaterial() {
         int id = getAmmoType();
-        Material mat = Material.getMaterial(id);
-        return mat;
-    }
-
-    public int getAmmoType() {
-        return ammoType;
+        return Material.getMaterial(id);
     }
 
     public void setAmmoType(String val) {
@@ -464,8 +454,8 @@ public class Gun {
             this.ammoByte = 0;
     }
 
-    public int getAmmoAmtNeeded() {
-        return ammoAmtNeeded;
+    public void clear() {
+        this.owner = null;
     }
 
     public Material getGunMaterial() {
@@ -478,10 +468,6 @@ public class Gun {
         return null;
     }
 
-    public int getGunType() {
-        return gunType;
-    }
-
     public void setGunType(String val) {
         this.gunType = getValueFromString(val);
         this.gunByte = getByteDataFromString(val);
@@ -489,26 +475,6 @@ public class Gun {
             this.ignoreItemData = true;
             this.gunByte = 0;
         }
-    }
-
-    public double getExplodeRadius() {
-        return explodeRadius;
-    }
-
-    public void setExplodeRadius(double parseDouble) {
-        this.explodeRadius = parseDouble;
-    }
-
-    public double getFireRadius() {
-        return fireRadius;
-    }
-
-    public void setFireRadius(double parseDouble) {
-        this.fireRadius = parseDouble;
-    }
-
-    public boolean isThrowable() {
-        return isThrowable;
     }
 
     public int getValueFromString(String str) {
@@ -528,86 +494,6 @@ public class Gun {
         return -1;
     }
 
-    public void setAmmoAmountNeeded(int parseInt) {
-        this.ammoAmtNeeded = parseInt;
-    }
-
-    public void setRoundsPerBurst(int parseInt) {
-        this.roundsPerBurst = parseInt;
-    }
-
-    public int getBulletsPerClick() {
-        return bulletsPerClick;
-    }
-
-    public void setBulletsPerClick(int parseInt) {
-        this.bulletsPerClick = parseInt;
-    }
-
-    public void setAccuracyAimed(double parseDouble) {
-        this.accuracy_aimed = parseDouble;
-    }
-
-    public void setAccuracyCrouched(double parseDouble) {
-        this.accuracy_crouched = parseDouble;
-    }
-
-    public void setCanHeadshot(boolean parseBoolean) {
-        this.canHeadshot = parseBoolean;
-    }
-
-    public void setCanClickLeft(boolean parseBoolean) {
-        this.canClickLeft = parseBoolean;
-    }
-
-    public void setCanClickRight(boolean parseBoolean) {
-        this.canClickRight = parseBoolean;
-    }
-
-    public void clear() {
-        this.owner = null;
-    }
-
-    public int getReloadTime() {
-        return reloadTime;
-    }
-
-    public void setReloadTime(int parseInt) {
-        this.reloadTime = parseInt;
-    }
-
-    public int getGunDamage() {
-        return this.gunDamage;
-    }
-
-    public void setGunDamage(int parseInt) {
-        this.gunDamage = parseInt;
-    }
-
-    public double getMaxDistance() {
-        return maxDistance;
-    }
-
-    public void setMaxDistance(int i) {
-        this.maxDistance = i;
-    }
-
-    public boolean canAimLeft() {
-        return canAimLeft;
-    }
-
-    public boolean canAimRight() {
-        return canAimRight;
-    }
-
-    public void setCanAimLeft(boolean parseBoolean) {
-        this.canAimLeft = parseBoolean;
-    }
-
-    public void setCanAimRight(boolean parseBoolean) {
-        this.canAimRight = parseBoolean;
-    }
-
     public void setOutOfAmmoMessage(String val) {
         this.outOfAmmoMessage = ChatColor.translateAlternateColorCodes('&', val);
     }
@@ -616,160 +502,8 @@ public class Gun {
         this.permissionMessage = ChatColor.translateAlternateColorCodes('&', val);
     }
 
-    public double getFlashRadius() {
-        return flashRadius;
-    }
-
-    public void setFlashRadius(double parseDouble) {
-        flashRadius = parseDouble;
-    }
-
-    public void setIsThrowable(boolean b) {
-        this.isThrowable = b;
-    }
-
-    public boolean canHeadShot() {
-        return this.canHeadshot;
-    }
-
-    public boolean hasSmokeTrail() {
-        return hasSmokeTrail;
-    }
-
-    public void setSmokeTrail(boolean b) {
-        hasSmokeTrail = b;
-    }
-
-    public boolean isLocalGunSound() {
-        return localGunSound;
-    }
-
-    public void setLocalGunSound(boolean b) {
-        this.localGunSound = b;
-    }
-
-    public int getArmorPenetration() {
-        return armorPenetration;
-    }
-
-    public void setArmorPenetration(int parseInt) {
-        this.armorPenetration = parseInt;
-    }
-
-    public int getExplosionDamage() {
-        return this.explosionDamage;
-    }
-
-    public void setExplosionDamage(int i) {
-        this.explosionDamage = i;
-    }
-
-    public String getFilename() {
-        return fileName;
-    }
-
-    public void setFilename(String string) {
-        this.fileName = string;
-    }
-
-    public byte getGunTypeByte() {
-        return gunByte;
-    }
-
-    public void setGunTypeByte(byte b) {
-        this.gunByte = b;
-    }
-
-    public byte getAmmoTypeByte() {
-        return this.ammoByte;
-    }
-
-    public void setAmmoTypeByte(byte b) {
-        this.ammoByte = b;
-    }
-
-    public double getRecoil() {
-        return recoil;
-    }
-
-    public void setRecoil(double d) {
-        this.recoil = d;
-    }
-
-    public double getKnockback() {
-        return this.knockback;
-    }
-
-    public void setKnockback(double d) {
-        this.knockback = d;
-    }
-
     public void addGunSounds(String val) {
         String[] sounds = val.split(",");
         gunSound.addAll(Arrays.asList(sounds));
-    }
-
-    public int getReleaseTime() {
-        return releaseTime;
-    }
-
-    public void setReleaseTime(int v) {
-        this.releaseTime = v;
-    }
-
-    public void setCanGoPastMaxDistance(boolean parseBoolean) {
-        this.canGoPastMaxDistance = parseBoolean;
-    }
-
-    public boolean canGoPastMaxDistance() {
-        return canGoPastMaxDistance;
-    }
-
-    public double getGunVolume() {
-        return gunVolume;
-    }
-
-    public void setGunVolume(double parseDouble) {
-        this.gunVolume = parseDouble;
-    }
-
-    public double getAccuracy() {
-        return this.accuracy;
-    }
-
-    public void setAccuracy(double parseDouble) {
-        this.accuracy = parseDouble;
-    }
-
-    public double getAccuracy_aimed() {
-        return this.accuracy_aimed;
-    }
-
-    public double getAccuracy_crouched() {
-        return this.accuracy_crouched;
-    }
-
-    public double getBulletSpeed() {
-        return bulletSpeed;
-    }
-
-    public void setBulletSpeed(double parseDouble) {
-        this.bulletSpeed = parseDouble;
-    }
-
-    public boolean getDestroyBulletWhenHit() {
-        return destroyBulletWhenHit;
-    }
-
-    public void setDestroyBulletWhenHit(boolean b) {
-        this.destroyBulletWhenHit = b;
-    }
-
-    public int getBulletDelayTime() {
-        return bulletDelayTime;
-    }
-
-    public void setBulletDelayTime(int i) {
-        this.bulletDelayTime = i;
     }
 }

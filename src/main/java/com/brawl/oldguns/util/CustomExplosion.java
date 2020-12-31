@@ -1,4 +1,4 @@
-package com.brawl.oldguns.gun.util;
+package com.brawl.oldguns.util;
 
 import com.brawl.base.util.Util;
 import com.google.common.collect.Lists;
@@ -36,8 +36,6 @@ public class CustomExplosion {
     private boolean chainExplosions = true;
     private boolean showParticles = true;
 
-    //	@Setter
-    //	private GunExplosionEvent parentEvent;
     private boolean ignoreExposure = false;
     private boolean silent = false;
     private float dropYield = 0.3f;
@@ -185,7 +183,7 @@ public class CustomExplosion {
                 offX *= idk;
                 offY *= idk;
                 offZ *= idk;
-                this.world.addParticle(EnumParticle.EXPLOSION_NORMAL, (partX + this.posX * 1.0D) / 2.0D, (partY + this.posY * 1.0D) / 2.0D, (partZ + this.posZ * 1.0D) / 2.0D, offX, offY, offZ);
+                this.world.addParticle(EnumParticle.EXPLOSION_NORMAL, (partX + this.posX) / 2.0D, (partY + this.posY) / 2.0D, (partZ + this.posZ) / 2.0D, offX, offY, offZ);
                 this.world.addParticle(EnumParticle.SMOKE_NORMAL, partX, partY, partZ, offX, offY, offZ);
             }
 
@@ -309,10 +307,10 @@ public class CustomExplosion {
         if (e instanceof net.minecraft.server.v1_8_R3.Entity) {
             net.minecraft.server.v1_8_R3.Entity entity = (net.minecraft.server.v1_8_R3.Entity) e;
             return entity.damageEntity(damageSource, (float) damage);
-        } else if (e instanceof SimpleDamageable) {
-            ((SimpleDamageable) e).damage(this, damage);
-            return true;
-        }
+        } //else if (e instanceof SimpleDamageable) { //redundant given simpledamageable is only used in this check
+        // ((SimpleDamageable) e).damage(this, damage);
+        // return true;
+        //}
 
         return false;
     }

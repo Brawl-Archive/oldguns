@@ -1,7 +1,7 @@
 package com.brawl.oldguns.events;
 
-import com.brawl.oldguns.gun.GunPlayer;
 import com.brawl.oldguns.gun.Gun;
+import com.brawl.oldguns.gun.GunPlayer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
