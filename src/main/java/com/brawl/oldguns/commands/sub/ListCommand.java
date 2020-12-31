@@ -20,7 +20,7 @@ public class ListCommand extends RankOnlyCommand {
         sender.sendMessage(C.DGRAY + "------- " + C.highlight(C.YELLOW + "Currently Loaded Guns") + C.DGRAY + "-------");
         ArrayList<Gun> loadedGuns = OldGuns.getInstance().getLoadedGuns();
         for (Gun g : loadedGuns) {
-            sender.sendMessage(" -" + g.getName() + C.YELLOW + "(" + g.getGunType() + ")" + C.GRAY + " AMMO: " + C.RED + g.getAmmoMaterial().toString() + C.GRAY + "  amt# " + C.RED + g.getAmmoAmtNeeded());
+            sender.sendMessage(" -" + g.getGunName() + C.YELLOW + "(" + g.getGunType() + ")" + C.GRAY + " AMMO: " + C.RED + g.getAmmoMaterial().toString() + C.GRAY + "  amt# " + C.RED + g.getAmmoAmtNeeded());
         }
         return true;
     }
