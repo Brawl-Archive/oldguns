@@ -286,15 +286,25 @@ public class OldGuns extends JavaPlugin {
         }
 
         public void run() {
+            // Tick all players
             GunPlayer.meta.forEach(GunPlayer::tick);
-            for (Bullet t : bullets) {
-                if (t != null) {
+
+            // Tick all bullets
+            for (int i = bullets.size() - 1; i >= 0; i--) {
+                Bullet t = bullets.get(i);
+                if (t != null)
                     t.tick();
-                }
+                else
+                    bullets.remove(i);
             }
-            for (EffectType eff : effects) {
+
+            // Tick all effects?
+            for (int i = effects.size() - 1; i >= 0; i--) {
+                EffectType eff = effects.get(i);
                 if (eff != null)
                     eff.tick();
+                else
+                    effects.remove(i);
             }
         }
     }
