@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>me.paul</groupId>
+        <groupId>com.brawl</groupId>
         <artifactId>parent-plugin</artifactId>
-        <version>1.5-SNAPSHOT</version>
+        <version>1.6-SNAPSHOT</version>
         <relativePath>../parent/parent-plugin/pom.xml</relativePath>
     </parent>
 
     <artifactId>oldguns</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>OldGuns</name>
@@ -31,16 +31,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.paul</groupId>
+            <groupId>com.brawl</groupId>
             <artifactId>base</artifactId>
-            <version>1.5-SNAPSHOT</version>
+            <version>1.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.10</version>
+            <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
