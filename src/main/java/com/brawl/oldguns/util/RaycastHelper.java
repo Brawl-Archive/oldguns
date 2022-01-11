@@ -1,6 +1,7 @@
 package com.brawl.oldguns.util;
 
 import com.brawl.base.packets.ParticlePacket;
+import com.brawl.base.util.Util;
 import com.brawl.shared.compatibility.XEnumParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,11 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RaycastHelper {
     public static double PRECISION = 0.1; //Lower is more precise (NEVER SET TO <= 0)
-    public static int MAX_RAY_DISTANCE = 256;
+    public static int MAX_RAY_DISTANCE = 128;
 
     public static Block rayCastToBlock(Location location, Vector normal_direction) {
         Location use = location.clone();
@@ -83,19 +83,7 @@ public class RaycastHelper {
     }
 
     public static ArrayList<Entity> getNearbyEntities(Location lastLocation, double dis) {
-        ArrayList<Entity> nearby = new ArrayList<>();
-        List<Entity> world = lastLocation.getWorld().getEntities();
-        synchronized (world) {
-            for (int i = world.size() - 1; i >= 0; i--) {
-                Entity e = world.get(i);
-                if (e != null) {
-                    if (e.getLocation().distance(lastLocation) < dis) {
-                        nearby.add(e);
-                    }
-                }
-            }
-        }
-        return nearby;
+        return new ArrayList<>(Util.getNearbyEntities(lastLocation, dis));
     }
 
     public static boolean hasLineOfSight(Location from, Location to) {
